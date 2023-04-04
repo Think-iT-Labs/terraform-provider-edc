@@ -10,6 +10,12 @@ github.com/Microsoft/go-winio v0.4.16 h1:FtSW/jqD+l4ba5iPBj9CODVtgfYAD8w2wS923g/
 github.com/Microsoft/go-winio v0.4.16/go.mod h1:XB6nPKklQyQ7GC9LdcBEcBl8PF76WugXOPRXwdLnMv0=
 github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 h1:YoJbenK9C67SkzkDfmQuVln04ygHj3vjZfd9FL+GmQQ=
 github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7/go.mod h1:z4/9nQmJSSwwds7ejkxaJwO37dru3geImFUdJlaLzQo=
+github.com/Think-iT-Labs/edc-connector-client/go v0.0.0-20230403234403-eda3ad5e94b7 h1:AY3TdOjfHylxs7ndFjUeSp2quYIza7c9nC2zp4zqZTI=
+github.com/Think-iT-Labs/edc-connector-client/go v0.0.0-20230403234403-eda3ad5e94b7/go.mod h1:rGBso9+/QGqA2p5B6MtyHaXd4oD/c5eF/Y5OM4reDQ8=
+github.com/Think-iT-Labs/edc-connector-client/go/config v0.0.0-20230404115458-1f9192b3748b h1:QmuI//LzXFqrfEPQNiSLxNYVfrpMl+ospmvhWPD7sRc=
+github.com/Think-iT-Labs/edc-connector-client/go/config v0.0.0-20230404115458-1f9192b3748b/go.mod h1:xpAoXv/FPYcc6qsP3qQw+HFjIdYc3pixrhUsUGeufbM=
+github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7 h1:y89jcBD0c6u537qL9M5gbjl1HFEjnmHMszcdo5Srnt0=
+github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7/go.mod h1:rq9BWydVNY28NhoBpertddsBa6J4Ajvsslpi1CqxX6Y=
 github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=
