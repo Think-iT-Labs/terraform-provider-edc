@@ -137,11 +137,11 @@ func TestEDCProvider_Configure(t *testing.T) {
 func getErrorPaths(errors diag.Diagnostics) []string {
 	var pathSteps []string
 	for _, dd := range errors {
-		step, ok := dd.(diag.DiagnosticWithPath)
+		diagWithPath, ok := dd.(diag.DiagnosticWithPath)
 		if !ok {
 			continue
 		}
-		pathSteps = append(pathSteps, step.Path().Steps().String())
+		pathSteps = append(pathSteps, diagWithPath.Path().Steps().String())
 	}
 	return pathSteps
 }
