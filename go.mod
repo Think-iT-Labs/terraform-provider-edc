@@ -1,15 +1,17 @@
-module github.com/hashicorp/terraform-provider-scaffolding-framework
+module github.com/Think-iT-Labs/terraform-provider-edc
 
 go 1.19
 
 require (
 	github.com/Think-iT-Labs/edc-connector-client/go/config v0.0.0-20230404115458-1f9192b3748b
 	github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7
+	github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411100849-5b71452a98ab
 	github.com/hashicorp/terraform-plugin-docs v0.14.1
 	github.com/hashicorp/terraform-plugin-framework v1.2.0
 	github.com/hashicorp/terraform-plugin-go v0.15.0
 	github.com/hashicorp/terraform-plugin-log v0.8.0
 	github.com/hashicorp/terraform-plugin-testing v1.2.0
+	github.com/hashicorp/terraform-provider-scaffolding-framework v0.0.0-20230327170713-abeef77b7701
 	github.com/stretchr/testify v1.8.2
 )
 

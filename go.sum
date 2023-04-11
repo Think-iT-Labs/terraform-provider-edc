@@ -16,6 +16,8 @@ github.com/Think-iT-Labs/edc-connector-client/go/config v0.0.0-20230404115458-1f
 github.com/Think-iT-Labs/edc-connector-client/go/config v0.0.0-20230404115458-1f9192b3748b/go.mod h1:xpAoXv/FPYcc6qsP3qQw+HFjIdYc3pixrhUsUGeufbM=
 github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7 h1:y89jcBD0c6u537qL9M5gbjl1HFEjnmHMszcdo5Srnt0=
 github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7/go.mod h1:rq9BWydVNY28NhoBpertddsBa6J4Ajvsslpi1CqxX6Y=
+github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411100849-5b71452a98ab h1:KoRjEyVGnv4s599++ZMphxPZekPZt7chYVq2ee2na+k=
+github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411100849-5b71452a98ab/go.mod h1:a3Hv/3wOWOmde9firCcBrRtapFrDWfPaaT9RaKNYaIo=
 github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=
@@ -109,6 +111,8 @@ github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1 h1:G9WAfb8LHeCxu7Ae8nc1agZl
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1/go.mod h1:xcOSYlRVdPLmDUoqPhO9fiO/YCN/l6MGYeTzGt5jgkQ=
 github.com/hashicorp/terraform-plugin-testing v1.2.0 h1:pASRAe6BOZFO4xSGQr9WzitXit0nrQAYDk8ziuRfn9E=
 github.com/hashicorp/terraform-plugin-testing v1.2.0/go.mod h1:+8bp3O7xUb1UtBcdknrGdVRIuTw4b62TYSIgXHqlyew=
+github.com/hashicorp/terraform-provider-scaffolding-framework v0.0.0-20230327170713-abeef77b7701 h1:vbp/6FkhxtbWtEzz8W24ryLXRO0IXaohOpqPtEj2GnU=
+github.com/hashicorp/terraform-provider-scaffolding-framework v0.0.0-20230327170713-abeef77b7701/go.mod h1:Uhey1rvW0GdkFx5CcC0M280aazRF4DOszVlIGKY1h6Q=
 github.com/hashicorp/terraform-registry-address v0.2.0 h1:92LUg03NhfgZv44zpNTLBGIbiyTokQCDcdH5BhVHT3s=
 github.com/hashicorp/terraform-registry-address v0.2.0/go.mod h1:478wuzJPzdmqT6OGbB/iH82EDcI8VFM4yujknh/1nIs=
 github.com/hashicorp/terraform-svchost v0.0.1 h1:Zj6fR5wnpOHnJUmLyWozjMeDaVuE+cstMPj41/eKmSQ=
