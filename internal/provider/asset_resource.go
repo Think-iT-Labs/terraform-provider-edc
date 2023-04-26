@@ -41,10 +41,10 @@ type DataAddress struct {
 	HttpDataAddress         *HttpDataAddress         `tfsdk:"http"`
 	S3StorageDataAddress    *S3StorageDataAddress    `tfsdk:"s3"`
 	AzureStorageDataAddress *AzureStorageDataAddress `tfsdk:"azure"`
+	CustomDataAddress       map[string]interface{}   `tfsdk:"custom"`
 }
 
 type HttpDataAddress struct {
-	Type             types.String `tfsdk:"type"`
 	Name             types.String `tfsdk:"name"`
 	Path             types.String `tfsdk:"path"`
 	Method           types.String `tfsdk:"method"`
@@ -60,7 +60,6 @@ type HttpDataAddress struct {
 }
 
 type S3StorageDataAddress struct {
-	Type            types.String `tfsdk:"type"`
 	Name            types.String `tfsdk:"name"`
 	BucketName      types.String `tfsdk:"bucket_name"`
 	AccessKeyId     types.String `tfsdk:"access_key_id"`
@@ -68,7 +67,6 @@ type S3StorageDataAddress struct {
 }
 
 type AzureStorageDataAddress struct {
-	Type      types.String `tfsdk:"type"`
 	Container types.String `tfsdk:"container"`
 	Account   types.String `tfsdk:"account"`
 	BlobName  types.String `tfsdk:"blob_name"`
@@ -333,8 +331,6 @@ func (r *AssetsResource) ImportState(ctx context.Context, req resource.ImportSta
 }
 
 func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
-	assetProperties := assets.AssetProperties(r.AssetProperties)
-
 	tflog.Info(context.TODO(), "address", map[string]interface{}{
 		"data": r.DataAddress,
 	})
@@ -342,7 +338,6 @@ func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
 
 	if r.DataAddress.HttpDataAddress != nil {
 		dataAddress.HttpDataAddress = &assets.HttpData{
-			Type:             r.DataAddress.HttpDataAddress.Type.ValueString(),
 			Name:             r.DataAddress.HttpDataAddress.Name.ValueStringPointer(),
 			Path:             r.DataAddress.HttpDataAddress.Path.ValueStringPointer(),
 			Method:           r.DataAddress.HttpDataAddress.Method.ValueStringPointer(),
@@ -360,7 +355,6 @@ func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
 
 	if r.DataAddress.S3StorageDataAddress != nil {
 		dataAddress.S3StorageDataAddress = &assets.S3Data{
-			Type:            r.DataAddress.S3StorageDataAddress.Type.ValueString(),
 			Name:            r.DataAddress.S3StorageDataAddress.Name.ValueStringPointer(),
 			BucketName:      r.DataAddress.S3StorageDataAddress.BucketName.ValueStringPointer(),
 			AccessKeyId:     r.DataAddress.S3StorageDataAddress.AccessKeyId.ValueStringPointer(),
@@ -370,46 +364,19 @@ func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
 
 	if r.DataAddress.AzureStorageDataAddress != nil {
 		dataAddress.AzureStorageDataAddress = &assets.AzureData{
-			Type:      r.DataAddress.AzureStorageDataAddress.Type.ValueString(),
 			Container: r.DataAddress.AzureStorageDataAddress.Container.ValueStringPointer(),
 			Account:   r.DataAddress.AzureStorageDataAddress.Account.ValueStringPointer(),
 			BlobName:  r.DataAddress.AzureStorageDataAddress.BlobName.ValueStringPointer(),
 		}
 	}
-	// dataAddress := assets.DataAddress{
-	// 	HttpDataAddress: &assets.HttpData{
-	// 		Type:             r.DataAddress.HttpDataAddress.Type.ValueString(),
-	// 		Name:             r.DataAddress.HttpDataAddress.Name.ValueStringPointer(),
-	// 		Path:             r.DataAddress.HttpDataAddress.Path.ValueStringPointer(),
-	// 		Method:           r.DataAddress.HttpDataAddress.Method.ValueStringPointer(),
-	// 		BaseUrl:          r.DataAddress.HttpDataAddress.BaseUrl.ValueStringPointer(),
-	// 		AuthKey:          r.DataAddress.HttpDataAddress.AuthKey.ValueStringPointer(),
-	// 		SecretName:       r.DataAddress.HttpDataAddress.SecretName.ValueStringPointer(),
-	// 		AuthCode:         r.DataAddress.HttpDataAddress.AuthCode.ValueStringPointer(),
-	// 		ProxyBody:        r.DataAddress.HttpDataAddress.ProxyBody.ValueStringPointer(),
-	// 		ProxyPath:        r.DataAddress.HttpDataAddress.ProxyPath.ValueStringPointer(),
-	// 		ProxyQueryParams: r.DataAddress.HttpDataAddress.ProxyQueryParams.ValueStringPointer(),
-	// 		ProxyMethod:      r.DataAddress.HttpDataAddress.ProxyMethod.ValueStringPointer(),
-	// 		ContentType:      r.DataAddress.HttpDataAddress.ContentType.ValueStringPointer(),
-	// 	},
-	// 	S3StorageDataAddress: &assets.S3Data{
-	// 		Type:            r.DataAddress.S3StorageDataAddress.Type.ValueString(),
-	// 		Name:            r.DataAddress.HttpDataAddress.Name.ValueStringPointer(),
-	// 		BucketName:      r.DataAddress.S3StorageDataAddress.BucketName.ValueStringPointer(),
-	// 		AccessKeyId:     r.DataAddress.S3StorageDataAddress.AccessKeyId.ValueStringPointer(),
-	// 		SecretAccessKey: r.DataAddress.S3StorageDataAddress.SecretAccessKey.ValueStringPointer(),
-	// 	},
-	// 	AzureStorageDataAddress: &assets.AzureData{
-	// 		Type:      r.DataAddress.AzureStorageDataAddress.Type.ValueString(),
-	// 		Container: r.DataAddress.AzureStorageDataAddress.Container.ValueStringPointer(),
-	// 		Account:   r.DataAddress.AzureStorageDataAddress.Account.ValueStringPointer(),
-	// 		BlobName:  r.DataAddress.AzureStorageDataAddress.BlobName.ValueStringPointer(),
-	// 	},
-	// }
+
+	if r.DataAddress.CustomDataAddress != nil {
+		dataAddress.CustomDataAddress = r.DataAddress.CustomDataAddress
+	}
 
 	return &assets.CreateAssetInput{
 		Asset: assets.Asset{
-			AssetProperties: assetProperties,
+			AssetProperties: r.AssetProperties,
 		},
 		DataAddress: dataAddress,
 	}
