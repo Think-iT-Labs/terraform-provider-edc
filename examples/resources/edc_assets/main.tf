@@ -19,15 +19,14 @@ provider "edc" {
 
 resource "edc_asset" "s3" {
   asset = {
-    "asset:prop:id" : "assetId",
-    "asset:prop:name" : "assetName",
+    "asset:prop:name" : "S3 with generated id",
     "asset:prop:contenttype" : "application/json",
   }
 
   data = {
     s3 = {
       type              = "AmazonS3"
-      name              = "test"
+      name              = "test2"
       bucket_name       = "test"
       access_key_id     = "dummy_key"
       secret_access_key = "dummy_key"

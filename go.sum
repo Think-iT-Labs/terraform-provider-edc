@@ -18,6 +18,8 @@ github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3a
 github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7/go.mod h1:rq9BWydVNY28NhoBpertddsBa6J4Ajvsslpi1CqxX6Y=
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411100849-5b71452a98ab h1:KoRjEyVGnv4s599++ZMphxPZekPZt7chYVq2ee2na+k=
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411100849-5b71452a98ab/go.mod h1:a3Hv/3wOWOmde9firCcBrRtapFrDWfPaaT9RaKNYaIo=
+github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411152828-f70d5d393564 h1:9lghziAODS+yLKxuU9SaorWlH+Df7gF08O+CgsBUTN4=
+github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411152828-f70d5d393564/go.mod h1:a3Hv/3wOWOmde9firCcBrRtapFrDWfPaaT9RaKNYaIo=
 github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=

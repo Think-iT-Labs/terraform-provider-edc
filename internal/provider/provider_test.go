@@ -14,25 +14,25 @@ import (
 )
 
 const (
-// providerConfig is a shared configuration to combine with the actual
-// test configuration so the EDC client is properly configured.
-// It is also possible to use the EDC environment variables instead,
-// such as updating the Makefile and running the testing through that tool.
-//
-//	providerConfig = `
-//
-//	provider "edc" {
-//		token = "1234"
-//		address = {
-//			default = "http://localhost:29193/api"
-//			management = "http://localhost:29193/api/v1/data"
-//			protocol = "http://localhost:29193/api/v1/ids"
-//			public = "http://localhost:29193/public"
-//			control = "http://localhost:29193/control"
-//		}
-//	}
-//
-// `
+	// providerConfig is a shared configuration to combine with the actual
+	// test configuration so the EDC client is properly configured.
+	// It is also possible to use the EDC environment variables instead,
+	// such as updating the Makefile and running the testing through that tool.
+	//
+	providerConfig = `
+
+	provider "edc" {
+		token = "1234"
+		address = {
+			default = "http://localhost:29193/api"
+			management = "http://localhost:29193/api/v1/data"
+			protocol = "http://localhost:29193/api/v1/ids"
+			public = "http://localhost:29193/public"
+			control = "http://localhost:29193/control"
+		}
+	}
+
+`
 )
 
 // testAccProtoV6ProviderFactories are used to instantiate a provider during

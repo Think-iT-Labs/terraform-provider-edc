@@ -266,12 +266,17 @@ func (r *AssetsResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+	ctx = tflog.SetField(ctx, "asset_id", data)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	asset, err := r.client.GetAsset(data.Id.String())
+	asset, err := r.client.GetAsset(data.Id.ValueString())
+
+	tflog.Info(ctx, "Asset", map[string]any{
+		"asset_properties": asset.AssetProperties,
+	})
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Assets, got error: %s", err))
@@ -316,7 +321,7 @@ func (r *AssetsResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		return
 	}
 
-	err := r.client.DeleteAsset(data.Id.String())
+	err := r.client.DeleteAsset(data.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Assets, got error: %s", err))
 		return
@@ -408,5 +413,4 @@ func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
 		},
 		DataAddress: dataAddress,
 	}
-
 }
