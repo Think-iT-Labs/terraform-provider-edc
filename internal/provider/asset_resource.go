@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
@@ -41,7 +42,7 @@ type DataAddress struct {
 	HttpDataAddress         *HttpDataAddress         `tfsdk:"http"`
 	S3StorageDataAddress    *S3StorageDataAddress    `tfsdk:"s3"`
 	AzureStorageDataAddress *AzureStorageDataAddress `tfsdk:"azure"`
-	CustomDataAddress       map[string]interface{}   `tfsdk:"custom"`
+	CustomDataAddress       types.String             `tfsdk:"custom"`
 }
 
 type HttpDataAddress struct {
@@ -108,10 +109,17 @@ func DataAssetsSchema() schema.SingleNestedAttribute {
 	return schema.SingleNestedAttribute{
 		Optional: true,
 		Attributes: map[string]schema.Attribute{
-			"s3":    S3Schema(),
-			"http":  HTTPSchema(),
-			"azure": AzureSchema(),
+			"s3":     S3Schema(),
+			"http":   HTTPSchema(),
+			"azure":  AzureSchema(),
+			"custom": CustomSchema(),
 		},
+	}
+}
+
+func CustomSchema() schema.StringAttribute {
+	return schema.StringAttribute{
+		Optional: true,
 	}
 }
 
@@ -119,9 +127,6 @@ func S3Schema() schema.SingleNestedAttribute {
 	return schema.SingleNestedAttribute{
 		Optional: true,
 		Attributes: map[string]schema.Attribute{
-			"type": schema.StringAttribute{
-				Optional: true,
-			},
 			"name": schema.StringAttribute{
 				Optional: true,
 			},
@@ -142,9 +147,6 @@ func AzureSchema() schema.SingleNestedAttribute {
 	return schema.SingleNestedAttribute{
 		Optional: true,
 		Attributes: map[string]schema.Attribute{
-			"type": schema.StringAttribute{
-				Optional: true,
-			},
 			"container": schema.StringAttribute{
 				Optional: true,
 			},
@@ -162,9 +164,6 @@ func HTTPSchema() schema.SingleNestedAttribute {
 	return schema.SingleNestedAttribute{
 		Optional: true,
 		Attributes: map[string]schema.Attribute{
-			"type": schema.StringAttribute{
-				Optional: true,
-			},
 			"path": schema.StringAttribute{
 				Optional: true,
 			},
@@ -240,7 +239,15 @@ func (r *AssetsResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 
-	output, err := r.client.CreateAsset(*data.toSDKObject())
+	sdkObject, err := data.toSDKObject(ctx)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error while trying to transform tf object to SDK object",
+			fmt.Sprintf("Unable to transform tf object to SDK object, got error: %s", err),
+		)
+		return
+	}
+	output, err := r.client.CreateAsset(*sdkObject)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Assets, got error: %s", err))
@@ -297,14 +304,6 @@ func (r *AssetsResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 
-	// If applicable, this is a great opportunity to initialize any necessary
-	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Assets, got error: %s", err))
-	//     return
-	// }
-
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
@@ -330,9 +329,9 @@ func (r *AssetsResource) ImportState(ctx context.Context, req resource.ImportSta
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
-	tflog.Info(context.TODO(), "address", map[string]interface{}{
-		"data": r.DataAddress,
+func (r *AssetsResourceModel) toSDKObject(ctx context.Context) (*assets.CreateAssetInput, error) {
+	tflog.Debug(ctx, "transform tf object to sdk object", map[string]interface{}{
+		"tf object": r.DataAddress,
 	})
 	dataAddress := assets.DataAddress{}
 
@@ -370,14 +369,17 @@ func (r *AssetsResourceModel) toSDKObject() *assets.CreateAssetInput {
 		}
 	}
 
-	if r.DataAddress.CustomDataAddress != nil {
-		dataAddress.CustomDataAddress = r.DataAddress.CustomDataAddress
+	if r.DataAddress.CustomDataAddress.ValueString() != "" {
+		err := json.Unmarshal([]byte(r.DataAddress.CustomDataAddress.ValueString()), &dataAddress.CustomDataAddress)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &assets.CreateAssetInput{
 		Asset: assets.Asset{
-			AssetProperties: r.AssetProperties,
+			AssetProperties: AssetProperties(r.AssetProperties),
 		},
 		DataAddress: dataAddress,
-	}
+	}, nil
 }

@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     edc = {
-      source = "Think-iT-Labs/edc"
+      source = "think-it-labs/edc"
     }
   }
 }

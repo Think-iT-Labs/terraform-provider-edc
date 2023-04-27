@@ -35,15 +35,20 @@ resource "edc_asset" "s3" {
 
 resource "edc_asset" "custom" {
   asset = {
-    "asset:prop:id" : "assetId",
-    "asset:prop:name" : "assetName",
+    "asset:prop:id" : "customAssetId",
+    "asset:prop:name" : "customAssetName",
     "asset:prop:contenttype" : "application/json",
   }
 
   data = {
-    custom = {
-      custom_name  = "custom_name"
-      custom_value = "custom_value"
+    custom = <<EOF
+    {
+      "type"              : "amazonS3",
+      "name"              : "testCustom",
+      "bucket_name"       : "testCustom",
+      "access_key_id"     : "dummy_key_custom",
+      "secret_access_key" : "dummy_key_custom"
     }
+    EOF
   }
 }
