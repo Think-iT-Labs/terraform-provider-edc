@@ -378,7 +378,7 @@ func (r *AssetsResourceModel) toSDKObject(ctx context.Context) (*assets.CreateAs
 
 	return &assets.CreateAssetInput{
 		Asset: assets.Asset{
-			AssetProperties: AssetProperties(r.AssetProperties),
+			AssetProperties: r.AssetProperties,
 		},
 		DataAddress: dataAddress,
 	}, nil

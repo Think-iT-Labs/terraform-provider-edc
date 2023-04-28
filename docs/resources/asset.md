@@ -74,5 +74,3 @@ Optional:
 - `bucket_name` (String)
 - `name` (String)
 - `secret_access_key` (String)
-
-
