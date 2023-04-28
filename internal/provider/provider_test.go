@@ -23,7 +23,7 @@ const (
 
 	provider "edc" {
 		token = "1234"
-		address = {
+		addresses = {
 			default = "http://localhost:29193/api"
 			management = "http://localhost:29193/api/v1/data"
 			protocol = "http://localhost:29193/api/v1/ids"
