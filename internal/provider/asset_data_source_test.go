@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
@@ -11,8 +12,8 @@ func TestAccAssetDataSource(t *testing.T) {
 	dataSourceName := "data.edc_asset.my_asset"
 	resourceName := "edc_asset.s3"
 
-	assetName := "randomAssetName"
-	assetId := "randomAssetId"
+	assetName := acctest.RandomWithPrefix("tf-acc-test")
+	assetId := acctest.RandomWithPrefix("tf-acc-test")
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccAssetResource(t *testing.T) {
 	resourceName := "edc_asset.s3"
-	assetId := "test-asset-id"
-	assetName := "test asset"
+	assetId := acctest.RandomWithPrefix("tf-acc-test")
+	assetName := acctest.RandomWithPrefix("tf-acc-test")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
