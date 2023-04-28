@@ -10,3 +10,5 @@ unit-test:
 
 pre-commit:
 	pre-commit install --install-hooks -t pre-commit -t commit-msg
+docs-gen:
+	go generate ./...

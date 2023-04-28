@@ -3,7 +3,7 @@
 page_title: "edc Provider"
 subcategory: ""
 description: |-
-
+  
 ---
 
 # edc Provider
@@ -13,9 +13,17 @@ description: |-
 ## Example Usage
 
 ```terraform
+terraform {
+  required_providers {
+    edc = {
+      source = "Think-iT-Labs/edc"
+    }
+  }
+}
+
 provider "edc" {
   token = "1234"
-  address = {
+  addresses = {
     default    = "http://localhost:29193/api"
     management = "http://localhost:29193/api/v1/data"
     protocol   = "http://localhost:29193/api/v1/ids"
@@ -30,9 +38,16 @@ provider "edc" {
 
 ### Optional
 
+- `addresses` (Attributes) (see [below for nested schema](#nestedatt--addresses))
+- `token` (String)
+
+<a id="nestedatt--addresses"></a>
+### Nested Schema for `addresses`
+
+Optional:
+
 - `control` (String)
 - `default` (String)
 - `management` (String)
 - `protocol` (String)
 - `public` (String)
-- `token` (String)
