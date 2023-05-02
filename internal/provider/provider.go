@@ -53,20 +53,25 @@ func (p *EDCProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 			"token": schema.StringAttribute{
 				Optional: true,
 			},
-			"control": schema.StringAttribute{
+			"addresses": schema.SingleNestedAttribute{
 				Optional: true,
-			},
-			"management": schema.StringAttribute{
-				Optional: true,
-			},
-			"protocol": schema.StringAttribute{
-				Optional: true,
-			},
-			"public": schema.StringAttribute{
-				Optional: true,
-			},
-			"default": schema.StringAttribute{
-				Optional: true,
+				Attributes: map[string]schema.Attribute{
+					"control": schema.StringAttribute{
+						Optional: true,
+					},
+					"management": schema.StringAttribute{
+						Optional: true,
+					},
+					"protocol": schema.StringAttribute{
+						Optional: true,
+					},
+					"public": schema.StringAttribute{
+						Optional: true,
+					},
+					"default": schema.StringAttribute{
+						Optional: true,
+					},
+				},
 			},
 		},
 	}
@@ -229,13 +234,13 @@ func validateProviderOptions(data EDCProviderModel, resp *provider.ConfigureResp
 
 func (p *EDCProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewExampleResource,
+		NewAssetsResource,
 	}
 }
 
 func (p *EDCProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewExampleDataSource,
+		NewAssetDataSource,
 	}
 }
 

@@ -1,13 +1,13 @@
 terraform {
   required_providers {
     edc = {
-      source = "Think-iT-Labs/edc"
+      source = "think-it-labs/edc"
     }
   }
 }
 
 provider "edc" {
-  token = "1234"
+  token = "test-token"
   addresses = {
     default    = "http://localhost:29193/api"
     management = "http://localhost:29193/api/v1/data"
@@ -15,4 +15,13 @@ provider "edc" {
     public     = "http://localhost:29193/public"
     control    = "http://localhost:29193/control"
   }
+}
+
+data "edc_asset" "asset" {
+  id = "assetId"
+}
+
+
+output "asset_output" {
+  value = data.edc_asset.asset
 }
