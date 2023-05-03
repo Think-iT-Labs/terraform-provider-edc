@@ -39,7 +39,7 @@ type Constraint struct {
 
 type Action struct {
 	Constraint *Constraint  `tfsdk:"constraint"`
-	IncludedIn types.String `tfsdk:"includedIn"`
+	IncludedIn types.String `tfsdk:"included_in"`
 	ActionType types.String `tfsdk:"type"`
 }
 
@@ -61,7 +61,7 @@ type Duty struct {
 	Target           types.String  `tfsdk:"target"`
 	UID              types.String  `tfsdk:"uid"`
 	Constraints      *[]Constraint `tfsdk:"constraints"`
-	ParentPermission *Permission   `tfsdk:"parentPermission"`
+	ParentPermission *Permission   `tfsdk:"parent_permission"`
 	Action           *Action       `tfsdk:"action"`
 }
 
@@ -76,11 +76,11 @@ type Prohibition struct {
 
 type Policy struct {
 	UID                  types.String          `tfsdk:"uid"`
-	Type                 map[string]PolicyType `tfsdk:"@type"`
+	Type                 map[string]PolicyType `tfsdk:"type"`
 	Assignee             types.String          `tfsdk:"assignee"`
 	Assigner             types.String          `tfsdk:"assigner"`
-	ExtensibleProperties *ExtensibleProperties `tfsdk:"extensibleProperties"`
-	InheritsFrom         types.String          `tfsdk:"inheritsFrom"`
+	ExtensibleProperties *ExtensibleProperties `tfsdk:"extensible_properties"`
+	InheritsFrom         types.String          `tfsdk:"inherits_from"`
 	Obligations          *[]Duty               `tfsdk:"obligations"`
 	Permissions          *[]Permission         `tfsdk:"permissions"`
 	Prohibitions         *[]Prohibition        `tfsdk:"prohibitions"`
@@ -89,7 +89,7 @@ type Policy struct {
 
 type PolicyDefinition struct {
 	Id        string `tfsdk:"id"`
-	CreatedAt int64  `tfsdk:"createdAt"`
+	CreatedAt int64  `tfsdk:"created_at"`
 	Policy    Policy `tfsdk:"policy"`
 }
 
@@ -305,6 +305,9 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 
 	sdkObject := data.toSDKObject(ctx)
 
+	// tflog.Debug(ctx, "SDK OBJECT", map[string]interface{}{
+	// 	"piwpiw": sdkObject,
+	// })
 	output, apiError, err := p.client.CreatePolicy(*sdkObject)
 
 	if err != nil {
@@ -407,8 +410,9 @@ func (p *PoliciesResource) ImportState(ctx context.Context, req resource.ImportS
 
 func (c *Constraint) toSDKObject() *policies.Constraint {
 	return &policies.Constraint{
-		EdcType: c.EdcType.String(),
+		EdcType: c.EdcType.ValueString(),
 	}
+
 }
 
 func (a *Action) toSDKObject() *policies.Action {
@@ -422,13 +426,17 @@ func (a *Action) toSDKObject() *policies.Action {
 func (p *Permission) toSDKObject() *policies.Permission {
 
 	var duties []policies.Duty
-	for _, v := range *p.Duties {
-		duties = append(duties, *v.toSDKObject())
+	if p.Duties != nil {
+		for _, v := range *p.Duties {
+			duties = append(duties, *v.toSDKObject())
+		}
 	}
 
 	var constraints []policies.Constraint
-	for _, v := range *p.Constraints {
-		constraints = append(constraints, *v.toSDKObject())
+	if p.Constraints != nil {
+		for _, v := range *p.Constraints {
+			constraints = append(constraints, *v.toSDKObject())
+		}
 	}
 	return &policies.Permission{
 		Assignee:    p.Assignee.ValueStringPointer(),
@@ -445,8 +453,10 @@ func (p *Permission) toSDKObject() *policies.Permission {
 func (d *Duty) toSDKObject() *policies.Duty {
 
 	var constraints []policies.Constraint
-	for _, v := range *d.Constraints {
-		constraints = append(constraints, *v.toSDKObject())
+	if d.Constraints != nil {
+		for _, v := range *d.Constraints {
+			constraints = append(constraints, *v.toSDKObject())
+		}
 	}
 
 	return &policies.Duty{
@@ -463,8 +473,10 @@ func (d *Duty) toSDKObject() *policies.Duty {
 
 func (d *Prohibition) toSDKObject() *policies.Prohibition {
 	var constraints []policies.Constraint
-	for _, v := range *d.Constraints {
-		constraints = append(constraints, *v.toSDKObject())
+	if d.Constraints != nil {
+		for _, v := range *d.Constraints {
+			constraints = append(constraints, *v.toSDKObject())
+		}
 	}
 
 	return &policies.Prohibition{
@@ -484,17 +496,30 @@ func (p *PolicyResourceModel) toSDKObject(ctx context.Context) *policies.CreateP
 	var extensibleProperties policies.ExtensibleProperties
 	var obligations []policies.Duty
 	var prohibitions []policies.Prohibition
+	var permissions []policies.Permission
 
-	for k, v := range *p.Policy.ExtensibleProperties {
-		extensibleProperties[k] = v
+	if p.Policy.ExtensibleProperties != nil {
+		for k, v := range *p.Policy.ExtensibleProperties {
+			extensibleProperties[k] = v
+		}
 	}
 
-	for _, v := range *p.Obligations {
-		obligations = append(obligations, *v.toSDKObject())
+	if p.Obligations != nil {
+		for _, v := range *p.Obligations {
+			obligations = append(obligations, *v.toSDKObject())
+		}
 	}
 
-	for _, v := range *p.Prohibitions {
-		prohibitions = append(prohibitions, *v.toSDKObject())
+	if p.Prohibitions != nil {
+		for _, v := range *p.Prohibitions {
+			prohibitions = append(prohibitions, *v.toSDKObject())
+		}
+	}
+
+	if p.Permissions != nil {
+		for _, v := range *p.Permissions {
+			permissions = append(permissions, *v.toSDKObject())
+		}
 	}
 
 	policy := policies.Policy{
@@ -506,6 +531,7 @@ func (p *PolicyResourceModel) toSDKObject(ctx context.Context) *policies.CreateP
 		ExtensibleProperties: &extensibleProperties,
 		Obligations:          &obligations,
 		Prohibitions:         &prohibitions,
+		Permissions:          &permissions,
 	}
 	return &policies.CreatePolicyInput{
 		Id:     p.Id.ValueStringPointer(),
