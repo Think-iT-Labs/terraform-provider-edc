@@ -19,6 +19,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
 	github.com/Think-iT-Labs/edc-connector-client/go v0.0.0-20230403234403-eda3ad5e94b7 // indirect
+	github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230502162532-3e0fd2067d71 // indirect
 	github.com/agext/levenshtein v1.2.2 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect

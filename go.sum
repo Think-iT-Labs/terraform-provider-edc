@@ -22,6 +22,10 @@ github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-202304111
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230411100849-5b71452a98ab/go.mod h1:a3Hv/3wOWOmde9firCcBrRtapFrDWfPaaT9RaKNYaIo=
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230426103919-a24a8df4a7ac h1:Us5sL1AOEIH8s4+6xHvC0dahcITFuj9961I9jpPNOVo=
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230426103919-a24a8df4a7ac/go.mod h1:a3Hv/3wOWOmde9firCcBrRtapFrDWfPaaT9RaKNYaIo=
+github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230426103919-a24a8df4a7ac h1:gHxlnJ+M2TQCLIJeALiyaBhosHJNY2LZ9YhssEocE4M=
+github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230426103919-a24a8df4a7ac/go.mod h1:VnGJXC3Cu5bl3yEXBWxpDnp9SIr2AdgQ9yALks9hCTY=
+github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230502162532-3e0fd2067d71 h1:uavgTJLlcjYfYSBhckGi1lSK6P7JiLgrkQjL/EGHv4k=
+github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230502162532-3e0fd2067d71/go.mod h1:VnGJXC3Cu5bl3yEXBWxpDnp9SIr2AdgQ9yALks9hCTY=
 github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=
