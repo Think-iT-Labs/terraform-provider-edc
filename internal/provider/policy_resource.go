@@ -28,6 +28,7 @@ const (
 	SetPolicyType      PolicyType = "set"
 	OfferPolicyType    PolicyType = "offer"
 	ContractPolicyType PolicyType = "contract"
+	MaxRecursionLevel  int        = 3
 )
 
 type ExtensibleProperties map[string]string
@@ -110,7 +111,7 @@ func (p *PoliciesResource) Schema(ctx context.Context, req resource.SchemaReques
 		Attributes: map[string]schema.Attribute{
 			"policy": PolicySchema(),
 			"id": schema.StringAttribute{
-				Computed:            true,
+				Optional:            true,
 				MarkdownDescription: "Policy identifier",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -136,7 +137,7 @@ func ActionSchema() schema.SingleNestedAttribute {
 		Optional: true,
 		Attributes: map[string]schema.Attribute{
 			"constraint": ConstraintSchema(),
-			"includedIn": schema.StringAttribute{
+			"included_in": schema.StringAttribute{
 				Optional: true,
 			},
 			"type": schema.StringAttribute{
@@ -146,63 +147,72 @@ func ActionSchema() schema.SingleNestedAttribute {
 	}
 }
 
-func PermissionSchema() schema.SingleNestedAttribute {
-	return schema.SingleNestedAttribute{
-		Optional: true,
-		Attributes: map[string]schema.Attribute{
-			"assignee": schema.StringAttribute{
-				Optional: true,
-			},
-			"assigner": schema.StringAttribute{
-				Optional: true,
-			},
-			"duties": schema.ListAttribute{
-				Optional:    true,
-				ElementType: DutySchema().GetType(),
-			},
-			"target": schema.StringAttribute{
-				Optional: true,
-			},
-			"uid": schema.StringAttribute{
-				Optional: true,
-			},
-			"constraints": schema.ListAttribute{
-				Optional:    true,
-				ElementType: ConstraintSchema().GetType(),
-			},
-			"action": ActionSchema(),
-			"edctype": schema.StringAttribute{
-				Optional: true,
-			},
+func PermissionSchema(level int) map[string]schema.Attribute {
+	attributes := map[string]schema.Attribute{
+		"assignee": schema.StringAttribute{
+			Optional: true,
+		},
+		"assigner": schema.StringAttribute{
+			Optional: true,
+		},
+		"target": schema.StringAttribute{
+			Optional: true,
+		},
+		"uid": schema.StringAttribute{
+			Optional: true,
+		},
+		"constraints": schema.ListAttribute{
+			Optional:    true,
+			ElementType: ConstraintSchema().GetType(),
+		},
+		"action": ActionSchema(),
+		"edctype": schema.StringAttribute{
+			Optional: true,
 		},
 	}
+	if level != 0 {
+		attributes["duties"] = schema.ListNestedAttribute{
+			Optional: true,
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: DutySchema(level - 1),
+			},
+		}
+	}
+
+	return attributes
 }
 
-func DutySchema() schema.SingleNestedAttribute {
-	return schema.SingleNestedAttribute{
-		Optional: true,
-		Attributes: map[string]schema.Attribute{
-			"assignee": schema.StringAttribute{
-				Optional: true,
-			},
-			"assigner": schema.StringAttribute{
-				Optional: true,
-			},
-			"consequence": DutySchema(),
-			"target": schema.StringAttribute{
-				Optional: true,
-			},
-			"uid": schema.StringAttribute{
-				Optional: true,
-			},
-			"constraints": schema.ListAttribute{
-				Optional:    true,
-				ElementType: ConstraintSchema().GetType(),
-			},
-			"parentPermission": PermissionSchema(),
-			"action":           ActionSchema(),
+func DutySchema(level int) map[string]schema.Attribute {
+	attributes := map[string]schema.Attribute{
+		"assignee": schema.StringAttribute{
+			Optional: true,
 		},
+		"assigner": schema.StringAttribute{
+			Optional: true,
+		},
+		"target": schema.StringAttribute{
+			Optional: true,
+		},
+		"uid": schema.StringAttribute{
+			Optional: true,
+		},
+		"constraints": schema.ListAttribute{
+			Optional:    true,
+			ElementType: ConstraintSchema().GetType(),
+		},
+		"parent_permission": schema.SingleNestedAttribute{
+			Optional:   true,
+			Attributes: PermissionSchema(level),
+		},
+		"action": ActionSchema(),
 	}
+	if level != 0 {
+		attributes["consequence"] = schema.SingleNestedAttribute{
+			Optional:   true,
+			Attributes: DutySchema(level - 1),
+		}
+	}
+	return attributes
 }
 
 func ProhibitionSchema() schema.SingleNestedAttribute {
@@ -238,7 +248,7 @@ func PolicySchema() schema.SingleNestedAttribute {
 			"uid": schema.StringAttribute{
 				Optional: true,
 			},
-			"@type": schema.MapAttribute{
+			"type": schema.MapAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
 			},
@@ -248,20 +258,24 @@ func PolicySchema() schema.SingleNestedAttribute {
 			"assigner": schema.StringAttribute{
 				Optional: true,
 			},
-			"extensibleProperties": schema.MapAttribute{
+			"extensible_properties": schema.MapAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
 			},
-			"inheritsFrom": schema.StringAttribute{
+			"inherits_from": schema.StringAttribute{
 				Optional: true,
 			},
-			"obligations": schema.ListAttribute{
-				Optional:    true,
-				ElementType: DutySchema().GetType(),
+			"obligations": schema.ListNestedAttribute{
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: DutySchema(MaxRecursionLevel),
+				},
 			},
-			"permissions": schema.ListAttribute{
-				Optional:    true,
-				ElementType: PermissionSchema().GetType(),
+			"permissions": schema.ListNestedAttribute{
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: PermissionSchema(MaxRecursionLevel),
+				},
 			},
 			"prohibitions": schema.ListAttribute{
 				Optional:    true,
