@@ -18,16 +18,16 @@ provider "edc" {
 }
 
 resource "edc_policy" "pol" {
-  id = "aPolicy"
+  id = "abcPolicy"
   policy = {
     uid = "231802-bb34-11ec-8422-0242ac120002",
     permissions = [
       {
-        target = "assetId",
+        edctype = "dataspaceconnector:permission",
+        target  = "assetId",
         action = {
           type = "USE"
         },
-        edctype = "dataspaceconnector:permission"
       }
     ]
   }

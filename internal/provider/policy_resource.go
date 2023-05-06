@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
 	"github.com/Think-iT-Labs/edc-connector-client/go/service/policies"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -34,7 +35,7 @@ const (
 type ExtensibleProperties map[string]string
 
 type Constraint struct {
-	EdcType types.String `tfsdk:"edctype"`
+	EdcType string `tfsdk:"edctype"`
 }
 
 type Action struct {
@@ -293,6 +294,34 @@ type PoliciesResource struct {
 	client *policies.Client
 }
 
+func (p *PoliciesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	// Prevent panic if the provider has not been configured.
+	if req.ProviderData == nil {
+		return
+	}
+
+	cfg, ok := req.ProviderData.(*edc.Config)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *edc.Config, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+
+		return
+	}
+
+	client, err := policies.New(*cfg)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Failed to initiate policies client",
+			fmt.Sprintf("Client Error: %v", err),
+		)
+		return
+	}
+
+	p.client = client
+}
+
 func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *PolicyResourceModel
 
@@ -303,11 +332,8 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	sdkObject := data.toSDKObject(ctx)
+	sdkObject := data.toSDKObject()
 
-	// tflog.Debug(ctx, "SDK OBJECT", map[string]interface{}{
-	// 	"piwpiw": sdkObject,
-	// })
 	output, apiError, err := p.client.CreatePolicy(*sdkObject)
 
 	if err != nil {
@@ -316,7 +342,7 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 	}
 
 	if apiError != nil {
-		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to create Policy, got error: %s", err))
+		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to create Policy, got error: %v", apiError))
 		return
 	}
 
@@ -410,17 +436,19 @@ func (p *PoliciesResource) ImportState(ctx context.Context, req resource.ImportS
 
 func (c *Constraint) toSDKObject() *policies.Constraint {
 	return &policies.Constraint{
-		EdcType: c.EdcType.ValueString(),
+		EdcType: c.EdcType,
 	}
-
 }
 
 func (a *Action) toSDKObject() *policies.Action {
-	return &policies.Action{
-		Constraint: a.Constraint.toSDKObject(),
+	action := &policies.Action{
 		IncludedIn: a.IncludedIn.ValueStringPointer(),
 		ActionType: a.ActionType.ValueStringPointer(),
 	}
+	if a.Constraint != nil {
+		action.Constraint = a.Constraint.toSDKObject()
+	}
+	return action
 }
 
 func (p *Permission) toSDKObject() *policies.Permission {
@@ -438,16 +466,25 @@ func (p *Permission) toSDKObject() *policies.Permission {
 			constraints = append(constraints, *v.toSDKObject())
 		}
 	}
-	return &policies.Permission{
-		Assignee:    p.Assignee.ValueStringPointer(),
-		Assigner:    p.Assigner.ValueStringPointer(),
-		Target:      p.Target.ValueStringPointer(),
-		UID:         p.UID.ValueStringPointer(),
-		Action:      p.Action.toSDKObject(),
-		Duties:      &duties,
-		Constraints: &constraints,
-		EdcType:     p.EdcType.ValueStringPointer(),
+	permission := &policies.Permission{
+		Assignee: p.Assignee.ValueStringPointer(),
+		Assigner: p.Assigner.ValueStringPointer(),
+		Target:   p.Target.ValueStringPointer(),
+		UID:      p.UID.ValueStringPointer(),
+		Action:   p.Action.toSDKObject(),
+		EdcType:  p.EdcType.ValueStringPointer(),
 	}
+
+	if len(constraints) != 0 {
+		permission.Constraints = &constraints
+	}
+
+	if len(duties) != 0 {
+		permission.Duties = &duties
+	}
+
+	return permission
+
 }
 
 func (d *Duty) toSDKObject() *policies.Duty {
@@ -458,17 +495,21 @@ func (d *Duty) toSDKObject() *policies.Duty {
 			constraints = append(constraints, *v.toSDKObject())
 		}
 	}
-
-	return &policies.Duty{
+	duty := &policies.Duty{
 		Assignee:         d.Assignee.ValueStringPointer(),
 		Assigner:         d.Assigner.ValueStringPointer(),
 		Target:           d.Target.ValueStringPointer(),
 		UID:              d.UID.ValueStringPointer(),
-		Constraints:      &constraints,
 		Consequence:      d.Consequence.toSDKObject(),
 		Action:           d.Action.toSDKObject(),
 		ParentPermission: d.ParentPermission.toSDKObject(),
 	}
+
+	if len(constraints) != 0 {
+		duty.Constraints = &constraints
+	}
+
+	return duty
 }
 
 func (d *Prohibition) toSDKObject() *policies.Prohibition {
@@ -478,21 +519,23 @@ func (d *Prohibition) toSDKObject() *policies.Prohibition {
 			constraints = append(constraints, *v.toSDKObject())
 		}
 	}
-
-	return &policies.Prohibition{
-		Assignee:    d.Assignee.ValueStringPointer(),
-		Assigner:    d.Assigner.ValueStringPointer(),
-		Target:      d.Target.ValueStringPointer(),
-		UID:         d.UID.ValueStringPointer(),
-		Action:      d.Action.toSDKObject(),
-		Constraints: &constraints,
+	prohibition := &policies.Prohibition{
+		Assignee: d.Assignee.ValueStringPointer(),
+		Assigner: d.Assigner.ValueStringPointer(),
+		Target:   d.Target.ValueStringPointer(),
+		UID:      d.UID.ValueStringPointer(),
+		Action:   d.Action.toSDKObject(),
 	}
+
+	if len(constraints) != 0 {
+		prohibition.Constraints = &constraints
+	}
+
+	return prohibition
 }
 
-func (p *PolicyResourceModel) toSDKObject(ctx context.Context) *policies.CreatePolicyInput {
-	tflog.Debug(ctx, "transform tf object to sdk object", map[string]interface{}{
-		"tf object": p.Policy,
-	})
+func (p *PolicyResourceModel) toSDKObject() *policies.CreatePolicyInput {
+
 	var extensibleProperties policies.ExtensibleProperties
 	var obligations []policies.Duty
 	var prohibitions []policies.Prohibition
@@ -523,16 +566,28 @@ func (p *PolicyResourceModel) toSDKObject(ctx context.Context) *policies.CreateP
 	}
 
 	policy := policies.Policy{
-		UID:                  p.Policy.UID.ValueStringPointer(),
-		Assignee:             p.Policy.Assignee.ValueStringPointer(),
-		Assigner:             p.Policy.Assigner.ValueStringPointer(),
-		InheritsFrom:         p.Policy.InheritsFrom.ValueStringPointer(),
-		Target:               p.Policy.Target.ValueStringPointer(),
-		ExtensibleProperties: &extensibleProperties,
-		Obligations:          &obligations,
-		Prohibitions:         &prohibitions,
-		Permissions:          &permissions,
+		UID:          p.Policy.UID.ValueStringPointer(),
+		Assignee:     p.Policy.Assignee.ValueStringPointer(),
+		Assigner:     p.Policy.Assigner.ValueStringPointer(),
+		InheritsFrom: p.Policy.InheritsFrom.ValueStringPointer(),
+		Target:       p.Policy.Target.ValueStringPointer(),
 	}
+	if len(extensibleProperties) != 0 {
+		policy.ExtensibleProperties = &extensibleProperties
+	}
+
+	if len(obligations) != 0 {
+		policy.Obligations = &obligations
+	}
+
+	if len(prohibitions) != 0 {
+		policy.Prohibitions = &prohibitions
+	}
+
+	if len(permissions) != 0 {
+		policy.Permissions = &permissions
+	}
+
 	return &policies.CreatePolicyInput{
 		Id:     p.Id.ValueStringPointer(),
 		Policy: policy,

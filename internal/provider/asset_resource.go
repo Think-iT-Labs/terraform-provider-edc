@@ -278,9 +278,9 @@ func (r *AssetsResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	asset, err := r.client.GetAsset(data.Id.ValueString())
 
-	tflog.Info(ctx, "Asset", map[string]any{
-		"asset_properties": asset.AssetProperties,
-	})
+	// tflog.Info(ctx, "Asset", map[string]any{
+	// 	"asset_properties": asset.AssetProperties,
+	// })
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Assets, got error: %s", err))
