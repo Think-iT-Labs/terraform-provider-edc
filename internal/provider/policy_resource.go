@@ -6,12 +6,15 @@ import (
 
 	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
 	"github.com/Think-iT-Labs/edc-connector-client/go/service/policies"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -77,7 +80,7 @@ type Prohibition struct {
 
 type Policy struct {
 	UID                  types.String          `tfsdk:"uid"`
-	Type                 map[string]PolicyType `tfsdk:"type"`
+	Type                 types.Map             `tfsdk:"type"`
 	Assignee             types.String          `tfsdk:"assignee"`
 	Assigner             types.String          `tfsdk:"assigner"`
 	ExtensibleProperties *ExtensibleProperties `tfsdk:"extensible_properties"`
@@ -250,7 +253,16 @@ func PolicySchema() schema.SingleNestedAttribute {
 				Optional: true,
 			},
 			"type": schema.MapAttribute{
-				Optional:    true,
+				Optional: true,
+				Computed: true,
+				Default: mapdefault.StaticValue(
+					types.MapValueMust(
+						types.StringType,
+						map[string]attr.Value{
+							"@policytype": types.StringValue("set"),
+						},
+					),
+				),
 				ElementType: types.StringType,
 			},
 			"assignee": schema.StringAttribute{
@@ -261,7 +273,14 @@ func PolicySchema() schema.SingleNestedAttribute {
 			},
 			"extensible_properties": schema.MapAttribute{
 				Optional:    true,
+				Computed:    true,
 				ElementType: types.StringType,
+				Default: mapdefault.StaticValue(
+					basetypes.NewMapValueMust(
+						types.StringType,
+						map[string]attr.Value{},
+					),
+				),
 			},
 			"inherits_from": schema.StringAttribute{
 				Optional: true,
@@ -334,7 +353,7 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 
 	sdkObject := data.toSDKObject()
 
-	output, apiError, err := p.client.CreatePolicy(*sdkObject)
+	policy, apiError, err := p.client.CreatePolicy(*sdkObject)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Policy, got error: %s", err))
@@ -345,10 +364,21 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to create Policy, got error: %v", apiError))
 		return
 	}
+	// if data.Policy.ExtensibleProperties == nil {
+	// 	data.Policy.ExtensibleProperties = &ExtensibleProperties{}
+	// }
+	// if data.Policy.Type.IsNull() {
+	// 	// data.Policy.Type = map[string]PolicyType{
+	// 	// 	"@policytype": "set",
+	// 	// }
+	// 	// data.Policy.Type = basetypes.NewMapValueMust(types.StringType, map[string]attr.Value{
+	// 	// 	"@policytype": types.StringValue("set"),
+	// 	// })
+	// }
 
 	// For the purposes of this Policies code, hardcoding a response value to
 	// save into the Terraform state.
-	data.Id = types.StringValue(output.Id)
+	data.Id = types.StringValue(policy.Id)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
@@ -371,12 +401,6 @@ func (p *PoliciesResource) Read(ctx context.Context, req resource.ReadRequest, r
 
 	policy, apiError, err := p.client.GetPolicy(data.Id.ValueString())
 
-	tflog.Info(ctx, "Policy", map[string]any{
-		"created_at": policy.CreatedAt,
-		"id":         policy.Id,
-		"policy":     policy.Policy,
-	})
-
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Policy with id %s, got error: %s", data.Id.String(), err))
 		return
@@ -387,9 +411,13 @@ func (p *PoliciesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	// TODO: double check this
-	// data.Policy = policy.Policy.Assignee
+	policy.Policy.UID = data.Policy.UID.ValueStringPointer()
 
+	data.Policy = *toTFPolicy(policy.Policy)
+
+	tflog.Info(ctx, "Policy", map[string]any{
+		"TYPE ": data.Policy.Type,
+	})
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }

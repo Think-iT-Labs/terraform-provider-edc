@@ -18,7 +18,7 @@ provider "edc" {
 }
 
 resource "edc_policy" "pol" {
-  id = "abcPolicy"
+  id = "abcdPolicy"
   policy = {
     uid = "231802-bb34-11ec-8422-0242ac120002",
     permissions = [

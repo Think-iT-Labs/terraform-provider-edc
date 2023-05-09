@@ -6,9 +6,11 @@ import (
 
 	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
 	"github.com/Think-iT-Labs/edc-connector-client/go/service/policies"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -104,28 +106,237 @@ func (d *PolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 
 	tflog.Info(ctx, "read a data source")
-	tflog.Info(ctx, "Policy", map[string]interface{}{
-		"obj": policy,
-	})
+
 	// save into the Terraform state.
-	data.Policy = toTFObject(policy.Policy)
+	data.Policy = toTFPolicy(policy.Policy)
 	data.CreatedAt = types.Int64Value(policy.CreatedAt)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "read a data source")
+	tflog.Trace(ctx, "read a policy data source")
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func toTFObject(policy policies.Policy) *Policy {
+func toTFConstraint(constraint policies.Constraint) *Constraint {
+	tfConstraint := &Constraint{}
 
-	return &Policy{
-		// ExtensibleProperties: ,
-		// UID:      basetypes.NewStringPointerValue(policy.UID),
-		// Assignee: basetypes.NewStringValue(*policy.Assignee),
-		// Assigner: basetypes.NewStringValue(*policy.Assigner),
-		// Target: basetypes.NewStringValue(*policy.Target),
+	tfConstraint.EdcType = constraint.EdcType
+
+	return tfConstraint
+}
+
+func toTFAction(action policies.Action) *Action {
+	tfAction := &Action{}
+
+	if action.IncludedIn != nil {
+		tfAction.IncludedIn = basetypes.NewStringPointerValue(action.IncludedIn)
 	}
+
+	if action.ActionType != nil {
+		tfAction.ActionType = basetypes.NewStringPointerValue(action.ActionType)
+	}
+
+	if action.Constraint != nil {
+		tfAction.Constraint = toTFConstraint(*action.Constraint)
+	}
+
+	return tfAction
+
+}
+
+func toTFDuty(duty policies.Duty) *Duty {
+	tfDuty := &Duty{}
+
+	if duty.Assignee != nil {
+		tfDuty.Assignee = basetypes.NewStringPointerValue(duty.Assignee)
+	}
+
+	if duty.Assigner != nil {
+		tfDuty.Assigner = basetypes.NewStringPointerValue(duty.Assigner)
+	}
+
+	if duty.Target != nil {
+		tfDuty.Target = basetypes.NewStringPointerValue(duty.Target)
+	}
+
+	if duty.UID != nil {
+		tfDuty.UID = basetypes.NewStringPointerValue(duty.UID)
+	}
+
+	if duty.ParentPermission != nil {
+		tfDuty.ParentPermission = toTFPermission(*duty.ParentPermission)
+	}
+
+	if duty.Action != nil {
+		tfDuty.Action = toTFAction(*duty.Action)
+	}
+
+	if duty.Consequence != nil {
+		tfDuty.Consequence = toTFDuty(*duty.Consequence)
+	}
+
+	if duty.Constraints != nil {
+		var constraints []Constraint
+		for _, constraint := range *duty.Constraints {
+			constraints = append(constraints, *toTFConstraint(constraint))
+		}
+		tfDuty.Constraints = &constraints
+	}
+
+	return tfDuty
+
+}
+
+func toTFPermission(permission policies.Permission) *Permission {
+	tfPermission := &Permission{}
+
+	if permission.Assignee != nil {
+		tfPermission.Assignee = basetypes.NewStringPointerValue(permission.Assignee)
+	}
+
+	if permission.Assigner != nil {
+		tfPermission.Assigner = basetypes.NewStringPointerValue(permission.Assigner)
+	}
+
+	if permission.Target != nil {
+		tfPermission.Target = basetypes.NewStringPointerValue(permission.Target)
+	}
+
+	if permission.UID != nil {
+		tfPermission.UID = basetypes.NewStringPointerValue(permission.UID)
+	}
+
+	if permission.EdcType != nil {
+		tfPermission.EdcType = basetypes.NewStringPointerValue(permission.EdcType)
+	}
+
+	if permission.Action != nil {
+		tfPermission.Action = toTFAction(*permission.Action)
+	}
+
+	if permission.Constraints != nil {
+		var constraints []Constraint
+		for _, constraint := range *permission.Constraints {
+			constraints = append(constraints, *toTFConstraint(constraint))
+		}
+		tfPermission.Constraints = &constraints
+	}
+
+	if permission.Duties != nil {
+		var duties []Duty
+		for _, duty := range *permission.Duties {
+			duties = append(duties, *toTFDuty(duty))
+		}
+		tfPermission.Duties = &duties
+	}
+
+	return tfPermission
+
+}
+
+func toTFProhibition(prohibition policies.Prohibition) *Prohibition {
+	tfProhibition := &Prohibition{}
+
+	if prohibition.Assignee != nil {
+		tfProhibition.Assignee = basetypes.NewStringPointerValue(prohibition.Assignee)
+	}
+
+	if prohibition.Assigner != nil {
+		tfProhibition.Assigner = basetypes.NewStringPointerValue(prohibition.Assigner)
+	}
+
+	if prohibition.Target != nil {
+		tfProhibition.Target = basetypes.NewStringPointerValue(prohibition.Target)
+	}
+
+	if prohibition.UID != nil {
+		tfProhibition.UID = basetypes.NewStringPointerValue(prohibition.UID)
+	}
+
+	if prohibition.Action != nil {
+		tfProhibition.Action = toTFAction(*prohibition.Action)
+	}
+
+	if prohibition.Constraints != nil {
+		var constraints []Constraint
+		for _, constraint := range *prohibition.Constraints {
+			constraints = append(constraints, *toTFConstraint(constraint))
+		}
+		tfProhibition.Constraints = &constraints
+	}
+
+	return tfProhibition
+
+}
+
+func toTFPolicyType(policyType map[string]policies.PolicyType) basetypes.MapValue {
+	var tfPolicyType = make(map[string]attr.Value, len(policyType))
+
+	for k, v := range policyType {
+		tfPolicyType[k] = types.StringValue(fmt.Sprintf("%s", v))
+	}
+
+	return basetypes.NewMapValueMust(types.StringType, tfPolicyType)
+}
+
+func toTFPolicy(policy policies.Policy) *Policy {
+
+	tfPolicy := &Policy{}
+
+	if policy.Assignee != nil {
+		tfPolicy.Assignee = basetypes.NewStringPointerValue(policy.Assignee)
+	}
+
+	if policy.Assigner != nil {
+		tfPolicy.Assigner = basetypes.NewStringPointerValue(policy.Assigner)
+	}
+
+	if policy.ExtensibleProperties != nil {
+		tfPolicy.ExtensibleProperties = (*ExtensibleProperties)(policy.ExtensibleProperties)
+	}
+
+	if policy.InheritsFrom != nil {
+		tfPolicy.InheritsFrom = basetypes.NewStringPointerValue(policy.InheritsFrom)
+	}
+
+	if policy.Target != nil {
+		tfPolicy.Target = basetypes.NewStringPointerValue(policy.Target)
+	}
+
+	if policy.UID != nil {
+		tfPolicy.UID = basetypes.NewStringPointerValue(policy.UID)
+	}
+
+	if policy.Type != nil {
+		tfPolicy.Type = toTFPolicyType(policy.Type)
+	}
+
+	if policy.Permissions != nil {
+		var permissions []Permission
+		for _, permission := range *policy.Permissions {
+			permissions = append(permissions, *toTFPermission(permission))
+		}
+		tfPolicy.Permissions = &permissions
+	}
+
+	if policy.Obligations != nil {
+		var obligations []Duty
+		for _, obligation := range *policy.Obligations {
+			obligations = append(obligations, *toTFDuty(obligation))
+		}
+		tfPolicy.Obligations = &obligations
+	}
+
+	if policy.Prohibitions != nil {
+		var prohibitions []Prohibition
+		for _, prohibition := range *policy.Prohibitions {
+			prohibitions = append(prohibitions, *toTFProhibition(prohibition))
+		}
+		tfPolicy.Prohibitions = &prohibitions
+	}
+
+	return tfPolicy
+
 }
