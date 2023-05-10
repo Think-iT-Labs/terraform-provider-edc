@@ -517,7 +517,7 @@ func (d *Duty) toSDKObject() *policies.Duty {
 		Assigner:         d.Assigner.ValueStringPointer(),
 		Target:           d.Target.ValueStringPointer(),
 		UID:              d.UID.ValueStringPointer(),
-		Consequence:      d.Consequence.toSDKObject(),
+		Consequence:      d.Consequence.toSDKObject(), //nolint:all
 		Action:           d.Action.toSDKObject(),
 		ParentPermission: d.ParentPermission.toSDKObject(),
 	}
@@ -559,6 +559,7 @@ func (p *PolicyResourceModel) toSDKObject() *policies.CreatePolicyInput {
 	var permissions []policies.Permission
 
 	if p.Policy.ExtensibleProperties != nil {
+		extensibleProperties = make(policies.ExtensibleProperties, len(*p.Policy.ExtensibleProperties))
 		for k, v := range *p.Policy.ExtensibleProperties {
 			extensibleProperties[k] = v
 		}

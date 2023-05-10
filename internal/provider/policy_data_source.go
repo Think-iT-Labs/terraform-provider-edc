@@ -275,7 +275,7 @@ func toTFPolicyType(policyType map[string]policies.PolicyType) basetypes.MapValu
 	var tfPolicyType = make(map[string]attr.Value, len(policyType))
 
 	for k, v := range policyType {
-		tfPolicyType[k] = types.StringValue(fmt.Sprintf("%s", v))
+		tfPolicyType[k] = types.StringValue(string(v))
 	}
 
 	return basetypes.NewMapValueMust(types.StringType, tfPolicyType)
