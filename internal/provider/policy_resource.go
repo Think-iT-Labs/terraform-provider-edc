@@ -364,17 +364,6 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to create Policy, got error: %v", apiError))
 		return
 	}
-	// if data.Policy.ExtensibleProperties == nil {
-	// 	data.Policy.ExtensibleProperties = &ExtensibleProperties{}
-	// }
-	// if data.Policy.Type.IsNull() {
-	// 	// data.Policy.Type = map[string]PolicyType{
-	// 	// 	"@policytype": "set",
-	// 	// }
-	// 	// data.Policy.Type = basetypes.NewMapValueMust(types.StringType, map[string]attr.Value{
-	// 	// 	"@policytype": types.StringValue("set"),
-	// 	// })
-	// }
 
 	// For the purposes of this Policies code, hardcoding a response value to
 	// save into the Terraform state.
