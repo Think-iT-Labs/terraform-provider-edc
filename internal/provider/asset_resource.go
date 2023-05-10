@@ -259,8 +259,7 @@ func (r *AssetsResource) Create(ctx context.Context, req resource.CreateRequest,
 	data.Id = types.StringValue(output.Id)
 
 	// Write logs using the tflog package
-	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "created a resource")
+	tflog.Trace(ctx, "created an asset")
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -278,10 +277,6 @@ func (r *AssetsResource) Read(ctx context.Context, req resource.ReadRequest, res
 	}
 
 	asset, err := r.client.GetAsset(data.Id.ValueString())
-
-	tflog.Info(ctx, "Asset", map[string]any{
-		"asset_properties": asset.AssetProperties,
-	})
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Assets, got error: %s", err))

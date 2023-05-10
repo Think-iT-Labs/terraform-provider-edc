@@ -235,12 +235,14 @@ func validateProviderOptions(data EDCProviderModel, resp *provider.ConfigureResp
 func (p *EDCProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewAssetsResource,
+		NewPoliciesResource,
 	}
 }
 
 func (p *EDCProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewAssetDataSource,
+		NewPolicyDataSource,
 	}
 }
 
