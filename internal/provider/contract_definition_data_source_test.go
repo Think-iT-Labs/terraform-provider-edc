@@ -18,6 +18,7 @@ func TestContractDefinitionDataSource(t *testing.T) {
 				Config: testAccContractDefinitionDataSourceConfig(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "createdAt", dataSourceName, "createdAt"),
 				),
 			},
 		},

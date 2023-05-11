@@ -130,8 +130,7 @@ func (d *ContractDefinitionDataSource) Read(ctx context.Context, req datasource.
 	data.ContractPolicyId = types.StringValue(cd.ContractPolicyId)
 	data.Validity = types.Int64Value(cd.Validity)
 	data.Criteria = criteriaModel(cd.Criteria)
-	// TODO add created_at when it is fixed
-	data.CreatedAt = types.Int64Value(0)
+	data.CreatedAt = types.Int64Value(cd.CreatedAt)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
