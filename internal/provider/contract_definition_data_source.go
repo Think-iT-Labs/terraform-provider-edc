@@ -26,8 +26,12 @@ type ContractDefinitionDataSource struct {
 
 // ContractDefinitionDataSourceModel describes the data source data model.
 type ContractDefinitionDataSourceModel struct {
-	ContractDefinitionResourceModel
-	CreatedAt int64 `tfsdk:"created_at"`
+	Id               types.String `tfsdk:"id"`
+	AccessPolicyId   types.String `tfsdk:"access_policy_id"`
+	ContractPolicyId types.String `tfsdk:"contract_policy_id"`
+	Validity         types.Int64  `tfsdk:"validity"`
+	Criteria         []Criterion  `tfsdk:"criteria"`
+	CreatedAt        types.Int64  `tfsdk:"created_at"`
 }
 
 func (d *ContractDefinitionDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -46,21 +50,30 @@ func (d *ContractDefinitionDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"access_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Access policy identifier",
-				Required:            true,
+				Computed:            true,
 			},
 			"contract_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Contract policy identifier",
-				Required:            true,
+				Computed:            true,
 			},
 			"validity": schema.Int64Attribute{
 				MarkdownDescription: "Validity",
-				Required:            true,
+				Computed:            true,
 			},
 			"created_at": schema.Int64Attribute{
 				MarkdownDescription: "Created at",
-				Required:            true,
+				Computed:            true,
 			},
-			"criteria": CriteriaSchema(),
+			"criteria": &schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"operand_left":  schema.StringAttribute{Computed: true},
+						"operator":      schema.StringAttribute{Computed: true},
+						"operand_right": schema.StringAttribute{Computed: true},
+					},
+				},
+			},
 		},
 	}
 }
@@ -116,14 +129,15 @@ func (d *ContractDefinitionDataSource) Read(ctx context.Context, req datasource.
 	data.AccessPolicyId = types.StringValue(cd.AccessPolicyId)
 	data.ContractPolicyId = types.StringValue(cd.ContractPolicyId)
 	data.Validity = types.Int64Value(cd.Validity)
-	data.Criteria = CriteriaModel(cd.Criteria)
+	data.Criteria = criteriaModel(cd.Criteria)
 	// TODO add created_at when it is fixed
+	data.CreatedAt = types.Int64Value(0)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func CriteriaModel(c []contractdefinition.Criterion) []Criterion {
+func criteriaModel(c []contractdefinition.Criterion) []Criterion {
 	criteria := make([]Criterion, len(c))
 	for i, criterion := range c {
 		criteria[i] = Criterion{

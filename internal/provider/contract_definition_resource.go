@@ -87,12 +87,12 @@ func (r *ContractDefinitionResource) Schema(ctx context.Context, req resource.Sc
 // CriteriaSchema returns the schema to use for tags.
 func CriteriaSchema() *schema.ListNestedAttribute {
 	return &schema.ListNestedAttribute{
-		Required: true,
+		Optional: true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"operand_left":  schema.StringAttribute{Required: true},
 				"operator":      schema.StringAttribute{Required: true},
-				"operand_right": schema.StringAttribute{Required: true},
+				"operand_right": schema.StringAttribute{Optional: true},
 			},
 		},
 	}
@@ -136,18 +136,7 @@ func (r *ContractDefinitionResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 
-	sdkObject, err := data.toSDKObject(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error while trying to transform tf object to SDK object",
-			fmt.Sprintf("Unable to transform tf object to SDK object, got error: %s", err),
-		)
-		return
-	}
-	tflog.Info(ctx, "creating a contract definition", map[string]interface{}{
-		"data.Criteria": data.Criteria,
-		"sdkObject":     sdkObject,
-	})
+	sdkObject := data.toSDKObject(ctx)
 	output, err := r.client.CreateContractDefinition(*sdkObject)
 
 	if err != nil {
@@ -185,7 +174,7 @@ func (r *ContractDefinitionResource) Read(ctx context.Context, req resource.Read
 	data.AccessPolicyId = types.StringValue(cd.AccessPolicyId)
 	data.ContractPolicyId = types.StringValue(cd.ContractPolicyId)
 	data.Validity = types.Int64Value(cd.Validity)
-	data.Criteria = CriteriaModel(cd.Criteria)
+	data.Criteria = criteriaModel(cd.Criteria)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -226,7 +215,7 @@ func (r *ContractDefinitionResource) ImportState(ctx context.Context, req resour
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-func (r *ContractDefinitionResourceModel) toSDKObject(ctx context.Context) (*contractdefinition.ContractDefinition, error) {
+func (r *ContractDefinitionResourceModel) toSDKObject(ctx context.Context) *contractdefinition.ContractDefinition {
 	tflog.Debug(ctx, "transform tf object to sdk object", map[string]interface{}{
 		"tf object": r,
 	})
@@ -236,7 +225,7 @@ func (r *ContractDefinitionResourceModel) toSDKObject(ctx context.Context) (*con
 		ContractPolicyId: r.ContractPolicyId.ValueString(),
 		Validity:         r.Validity.ValueInt64(),
 		Criteria:         criteriaToSDKObject(r.Criteria),
-	}, nil
+	}
 }
 
 func criteriaToSDKObject(c []Criterion) []contractdefinition.Criterion {
