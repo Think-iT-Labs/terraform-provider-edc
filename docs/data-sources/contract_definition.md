@@ -3,12 +3,12 @@
 page_title: "edc_contract_definition Data Source - terraform-provider-edc"
 subcategory: ""
 description: |-
-  Asset data source
+  Contract Definition Data Source
 ---
 
 # edc_contract_definition (Data Source)
 
-Asset data source
+Contract Definition Data Source
 
 
 
@@ -17,13 +17,13 @@ Asset data source
 
 ### Required
 
-- `id` (String) Asset identifier
+- `id` (String) Contract definition identifier
 
 ### Read-Only
 
 - `access_policy_id` (String) Access policy identifier
 - `contract_policy_id` (String) Contract policy identifier
-- `created_at` (Number) Created at
+- `created_at` (Number) Created at timestamp in seconds
 - `criteria` (Attributes List) (see [below for nested schema](#nestedatt--criteria))
 - `validity` (Number) Validity
 

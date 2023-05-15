@@ -85,8 +85,8 @@ resource "edc_contract_definition" "name" {
 
 ### Required
 
-- `access_policy_id` (String) Access policy id identifier
-- `contract_policy_id` (String) Contract policy id identifier
+- `access_policy_id` (String) Access policy identifier
+- `contract_policy_id` (String) Contract policy identifier
 - `validity` (Number) Contract definition validity in seconds
 
 ### Optional
@@ -95,7 +95,7 @@ resource "edc_contract_definition" "name" {
 
 ### Read-Only
 
-- `id` (String) Contract definition id identifier
+- `id` (String) Contract definition identifier
 
 <a id="nestedatt--criteria"></a>
 ### Nested Schema for `criteria`
