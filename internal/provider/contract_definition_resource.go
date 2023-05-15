@@ -6,11 +6,13 @@ import (
 
 	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
 	"github.com/Think-iT-Labs/edc-connector-client/go/service/contractdefinition"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -55,7 +57,7 @@ func (r *ContractDefinitionResource) Schema(ctx context.Context, req resource.Sc
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Contract definition id identifier",
+				MarkdownDescription: "Contract definition identifier",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -78,6 +80,9 @@ func (r *ContractDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				Required:            true,
 				MarkdownDescription: "Contract definition validity in seconds",
 				PlanModifiers:       []planmodifier.Int64{},
+				Validators: []validator.Int64{
+					int64validator.AtLeast(1),
+				},
 			},
 			"criteria": CriteriaSchema(),
 		},

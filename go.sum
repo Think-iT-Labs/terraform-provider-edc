@@ -18,8 +18,6 @@ github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230412150151-8c341
 github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230412150151-8c34129e8dc5/go.mod h1:rq9BWydVNY28NhoBpertddsBa6J4Ajvsslpi1CqxX6Y=
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230426103919-a24a8df4a7ac h1:Us5sL1AOEIH8s4+6xHvC0dahcITFuj9961I9jpPNOVo=
 github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230426103919-a24a8df4a7ac/go.mod h1:a3Hv/3wOWOmde9firCcBrRtapFrDWfPaaT9RaKNYaIo=
-github.com/Think-iT-Labs/edc-connector-client/go/service/contractdefinition v0.0.0-20230502162532-3e0fd2067d71 h1:qcP8WA/QDzxhEwxN87AFiZSc+qPIZqR5FahEZD3DYx8=
-github.com/Think-iT-Labs/edc-connector-client/go/service/contractdefinition v0.0.0-20230502162532-3e0fd2067d71/go.mod h1:jiLqicShsDZ2+UWrp82rXPeJVkZ51B6yvaX+oE0UP9s=
 github.com/Think-iT-Labs/edc-connector-client/go/service/contractdefinition v0.0.0-20230511160613-102503b96176 h1:1sbDXL+Ur9SYp9aFjm2epHBraBosVLvQfSHrC7ofjiQ=
 github.com/Think-iT-Labs/edc-connector-client/go/service/contractdefinition v0.0.0-20230511160613-102503b96176/go.mod h1:jiLqicShsDZ2+UWrp82rXPeJVkZ51B6yvaX+oE0UP9s=
 github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230502162532-3e0fd2067d71 h1:uavgTJLlcjYfYSBhckGi1lSK6P7JiLgrkQjL/EGHv4k=
@@ -110,6 +108,8 @@ github.com/hashicorp/terraform-plugin-docs v0.14.1 h1:MikFi59KxrP/ewrZoaowrB9he5
 github.com/hashicorp/terraform-plugin-docs v0.14.1/go.mod h1:k2NW8+t113jAus6bb5tQYQgEAX/KueE/u8X2Z45V1GM=
 github.com/hashicorp/terraform-plugin-framework v1.2.0 h1:MZjFFfULnFq8fh04FqrKPcJ/nGpHOvX4buIygT3MSNY=
 github.com/hashicorp/terraform-plugin-framework v1.2.0/go.mod h1:nToI62JylqXDq84weLJ/U3umUsBhZAaTmU0HXIVUOcw=
+github.com/hashicorp/terraform-plugin-framework-validators v0.10.0 h1:4L0tmy/8esP6OcvocVymw52lY0HyQ5OxB7VNl7k4bS0=
+github.com/hashicorp/terraform-plugin-framework-validators v0.10.0/go.mod h1:qdQJCdimB9JeX2YwOpItEu+IrfoJjWQ5PhLpAOMDQAE=
 github.com/hashicorp/terraform-plugin-go v0.15.0 h1:1BJNSUFs09DS8h/XNyJNJaeusQuWc/T9V99ylU9Zwp0=
 github.com/hashicorp/terraform-plugin-go v0.15.0/go.mod h1:tk9E3/Zx4RlF/9FdGAhwxHExqIHHldqiQGt20G6g+nQ=
 github.com/hashicorp/terraform-plugin-log v0.8.0 h1:pX2VQ/TGKu+UU1rCay0OlzosNKe4Nz1pepLXj95oyy0=

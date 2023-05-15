@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-// Ensure provider defined types fully satisfy framework interfaces.
+// Ensure ContractDefinitionDataSource fully satisfies interfaces defined by the terraform provider framework.
 var _ datasource.DataSource = &ContractDefinitionDataSource{}
 
 func NewContractDefinitionDataSource() datasource.DataSource {
@@ -41,11 +41,11 @@ func (d *ContractDefinitionDataSource) Metadata(ctx context.Context, req datasou
 func (d *ContractDefinitionDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Asset data source",
+		MarkdownDescription: "Contract Definition Data Source",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "Asset identifier",
+				MarkdownDescription: "Contract definition identifier",
 				Required:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
@@ -61,7 +61,7 @@ func (d *ContractDefinitionDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"created_at": schema.Int64Attribute{
-				MarkdownDescription: "Created at",
+				MarkdownDescription: "Created at timestamp in seconds",
 				Computed:            true,
 			},
 			"criteria": &schema.ListNestedAttribute{
@@ -97,7 +97,7 @@ func (d *ContractDefinitionDataSource) Configure(ctx context.Context, req dataso
 	client, err := contractdefinition.New(*cfg)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Failed to initiate assets client",
+			"Failed to initiate contract definition client",
 			fmt.Sprintf("Client Error: %v", err),
 		)
 		return
@@ -123,9 +123,7 @@ func (d *ContractDefinitionDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 
-	tflog.Info(ctx, "read contract definition")
-	// For the purposes of this Asset code, hardcoding a response value to
-	// save into the Terraform state.
+	tflog.Info(ctx, fmt.Sprintf("read contract definition %s", cd.Id))
 	data.AccessPolicyId = types.StringValue(cd.AccessPolicyId)
 	data.ContractPolicyId = types.StringValue(cd.ContractPolicyId)
 	data.Validity = types.Int64Value(cd.Validity)
