@@ -6,7 +6,7 @@ go 1.19
 
 require (
 	github.com/Think-iT-Labs/edc-connector-client/go/config v0.0.0-20230426103919-a24a8df4a7ac
-	github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230403234403-eda3ad5e94b7
+	github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230412150151-8c34129e8dc5
 	github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230426103919-a24a8df4a7ac
 	github.com/hashicorp/terraform-plugin-docs v0.14.1
 	github.com/hashicorp/terraform-plugin-framework v1.2.0
@@ -21,6 +21,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
 	github.com/Think-iT-Labs/edc-connector-client/go v0.0.0-20230403234403-eda3ad5e94b7 // indirect
+	github.com/Think-iT-Labs/edc-connector-client/go/service/contractdefinition v0.0.0-20230511160613-102503b96176
 	github.com/Think-iT-Labs/edc-connector-client/go/service/policies v0.0.0-20230502162532-3e0fd2067d71
 	github.com/agext/levenshtein v1.2.2 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
@@ -45,6 +46,7 @@ require (
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.18.1 // indirect
 	github.com/hashicorp/terraform-json v0.16.0 // indirect
+	github.com/hashicorp/terraform-plugin-framework-validators v0.10.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1
 	github.com/hashicorp/terraform-registry-address v0.2.0 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.0 // indirect

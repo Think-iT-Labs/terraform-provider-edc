@@ -236,6 +236,7 @@ func (p *EDCProvider) Resources(ctx context.Context) []func() resource.Resource 
 	return []func() resource.Resource{
 		NewAssetsResource,
 		NewPoliciesResource,
+		NewContractDefinitionResource,
 	}
 }
 
@@ -243,6 +244,7 @@ func (p *EDCProvider) DataSources(ctx context.Context) []func() datasource.DataS
 	return []func() datasource.DataSource{
 		NewAssetDataSource,
 		NewPolicyDataSource,
+		NewContractDefinitionDataSource,
 	}
 }
 
