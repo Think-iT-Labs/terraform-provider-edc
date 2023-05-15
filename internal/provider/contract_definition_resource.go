@@ -64,14 +64,14 @@ func (r *ContractDefinitionResource) Schema(ctx context.Context, req resource.Sc
 			},
 			"access_policy_id": schema.StringAttribute{
 				Required:            true,
-				MarkdownDescription: "Access policy id identifier",
+				MarkdownDescription: "Access policy identifier",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"contract_policy_id": schema.StringAttribute{
 				Required:            true,
-				MarkdownDescription: "Contract policy id identifier",
+				MarkdownDescription: "Contract policy identifier",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
