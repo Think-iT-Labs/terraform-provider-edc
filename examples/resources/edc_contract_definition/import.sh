@@ -1,0 +1,1 @@
+terraform import edc_contract_definition contractId
