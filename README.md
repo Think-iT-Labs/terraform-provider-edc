@@ -103,11 +103,7 @@ The EDC provider allows Terraform to manage EDC resources.
         ]
     }
     ```
-    3- Install the provider by running this command:
-    ```bash
-    terraform install
-    ```
-    4- Run the example by running the following command:
+    3- Run the example by running the following command:
     ```
     terraform apply
     ```
