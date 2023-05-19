@@ -28,7 +28,8 @@ type AssetDataSource struct {
 type AssetDataSourceModel struct {
 	Id              types.String `tfsdk:"id"`
 	AssetProperties `tfsdk:"asset_properties"`
-	CreatedAt       types.Int64 `tfsdk:"created_at"`
+	CreatedAt       types.Int64     `tfsdk:"created_at"`
+	DataAddress     AssetProperties `tfsdk:"data_address"`
 }
 
 func (d *AssetDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -51,6 +52,10 @@ func (d *AssetDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"created_at": schema.Int64Attribute{
 				Computed: true,
+			},
+			"data_address": schema.MapAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
 		},
 	}
@@ -101,11 +106,19 @@ func (d *AssetDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
+	assetProperties, err := d.client.GetAssetDataAddress(data.Id.ValueString())
+
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Asset Data Address, got error: %s", err))
+		return
+	}
+
 	tflog.Info(ctx, "read a data source")
 	// For the purposes of this Asset code, hardcoding a response value to
 	// save into the Terraform state.
 	data.AssetProperties = AssetProperties(asset.AssetProperties)
 	data.CreatedAt = types.Int64Value(asset.CreatedAt)
+	data.DataAddress = AssetProperties(assetProperties.AssetProperties)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log

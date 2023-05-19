@@ -23,6 +23,12 @@ func TestAccAssetDataSource(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(resourceName, "createdAt", dataSourceName, "createdAt"),
 					resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "asset.asset:prop:name", dataSourceName, "asset_properties.asset:prop:name"),
+					resource.TestCheckResourceAttrPair(resourceName, "asset.asset:prop:contenttype", dataSourceName, "asset_properties.asset:prop:contenttype"),
+					resource.TestCheckResourceAttrPair(resourceName, "data.s3.name", dataSourceName, "data_address.name"),
+					resource.TestCheckResourceAttrPair(resourceName, "data.s3.bucket_name", dataSourceName, "data_address.bucketName"),
+					resource.TestCheckResourceAttrPair(resourceName, "data.s3.access_key_id", dataSourceName, "data_address.accessKeyId"),
+					resource.TestCheckResourceAttrPair(resourceName, "data.s3.secret_access_key", dataSourceName, "data_address.secretAccessKey"),
 				),
 			},
 		},
