@@ -164,6 +164,9 @@ func HTTPSchema() schema.SingleNestedAttribute {
 	return schema.SingleNestedAttribute{
 		Optional: true,
 		Attributes: map[string]schema.Attribute{
+			"name": schema.StringAttribute{
+				Optional: true,
+			},
 			"path": schema.StringAttribute{
 				Optional: true,
 			},

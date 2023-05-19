@@ -114,6 +114,7 @@ Optional:
 - `base_url` (String)
 - `content_type` (String)
 - `method` (String)
+- `name` (String)
 - `path` (String)
 - `proxy_body` (String)
 - `proxy_method` (String)
