@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
-func TestAccAssetResource(t *testing.T) {
+func TestAccS3AssetResource(t *testing.T) {
 	resourceName := "edc_asset.s3"
 	assetId := acctest.RandomWithPrefix("tf-acc-test")
 	assetName := acctest.RandomWithPrefix("tf-acc-test")
@@ -19,7 +19,7 @@ func TestAccAssetResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and read testing
 			{
-				Config: testAccAssetResourceConfig(assetId, assetName),
+				Config: testAccS3AssetResourceConfig(assetId, assetName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", assetId),
 					resource.TestCheckResourceAttr(resourceName, "asset.asset:prop:name", assetName),
@@ -35,7 +35,7 @@ func TestAccAssetResource(t *testing.T) {
 	})
 }
 
-func testAccAssetResourceConfig(assetId, assetName string) string {
+func testAccS3AssetResourceConfig(assetId, assetName string) string {
 	return providerConfig + fmt.Sprintf(`
 resource "edc_asset" "s3" {
 	asset = {
@@ -50,6 +50,50 @@ resource "edc_asset" "s3" {
 			bucket_name       = "testBucket"
 			access_key_id     = "dummy_key"
 			secret_access_key = "dummy_key"
+		}
+	}
+}
+`, assetId, assetName)
+}
+
+func TestAccHttpAssetResource(t *testing.T) {
+	resourceName := "edc_asset.http"
+	assetId := acctest.RandomWithPrefix("tf-acc-test")
+	assetName := acctest.RandomWithPrefix("tf-acc-test")
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and read testing
+			{
+				Config: testAccHttpAssetResourceConfig(assetId, assetName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "id", assetId),
+					resource.TestCheckResourceAttr(resourceName, "asset.asset:prop:name", assetName),
+					resource.TestCheckResourceAttr(resourceName, "asset.asset:prop:contenttype", "application/json"),
+					resource.TestCheckResourceAttr(resourceName, "asset.asset:prop:id", assetId),
+					resource.TestCheckResourceAttr(resourceName, "data.http.name", "terraform"),
+					resource.TestCheckResourceAttr(resourceName, "data.http.base_url", "https://connecor/invalid-data.json"),
+				),
+			},
+		},
+	})
+}
+
+func testAccHttpAssetResourceConfig(assetId, assetName string) string {
+	return providerConfig + fmt.Sprintf(`
+resource "edc_asset" "http" {
+	asset = {
+		"asset:prop:name" : %[2]q,
+		"asset:prop:contenttype" : "application/json",
+		"asset:prop:id": %[1]q,
+	}
+
+	data = {
+		http = {
+		  name  = "terraform"
+		  base_url = "https://connecor/invalid-data.json"
 		}
 	}
 }
