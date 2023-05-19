@@ -18,7 +18,7 @@ provider "edc" {
 }
 
 data "edc_asset" "asset" {
-  id = "assetId"
+  id = "6dca15a6-8cb4-4f63-8739-e6adce7430ad"
 }
 
 
