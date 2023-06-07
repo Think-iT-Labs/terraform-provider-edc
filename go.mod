@@ -9,9 +9,9 @@ require (
 	github.com/Think-iT-Labs/edc-connector-client/go/edc v0.0.0-20230412150151-8c34129e8dc5
 	github.com/Think-iT-Labs/edc-connector-client/go/service/assets v0.0.0-20230426103919-a24a8df4a7ac
 	github.com/hashicorp/terraform-plugin-docs v0.14.1
-	github.com/hashicorp/terraform-plugin-framework v1.2.0
+	github.com/hashicorp/terraform-plugin-framework v1.3.0
 	github.com/hashicorp/terraform-plugin-go v0.15.0
-	github.com/hashicorp/terraform-plugin-log v0.8.0
+	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.2.0
 	github.com/stretchr/testify v1.8.2
 )
