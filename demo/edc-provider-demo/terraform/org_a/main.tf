@@ -1,5 +1,4 @@
 resource "edc_asset" "asset_1" {
-  provider = edc.org_a
   asset = {
     "asset:prop:id" : "asset_1_org_a",
     "asset:prop:name" : "FirstAssetOrgA",
@@ -16,7 +15,6 @@ resource "edc_asset" "asset_1" {
 }
 
 resource "edc_asset" "asset_2" {
-  provider = edc.org_a
   asset = {
     "asset:prop:id" : "asset_2_org_a",
     "asset:prop:name" : "SecondAssetOrgA",
@@ -33,7 +31,6 @@ resource "edc_asset" "asset_2" {
 }
 
 resource "edc_asset" "asset_3" {
-  provider = edc.org_a
   asset = {
     "asset:prop:id" : "asset_3_org_a",
     "asset:prop:name" : "ThirdAssetOrgA",
@@ -50,7 +47,6 @@ resource "edc_asset" "asset_3" {
 }
 
 resource "edc_asset" "asset_4" {
-  provider = edc.org_a
   asset = {
     "asset:prop:id" : "asset_4_org_a",
     "asset:prop:name" : "FourthAssetOrgA",

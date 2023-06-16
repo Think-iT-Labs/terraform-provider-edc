@@ -1,5 +1,4 @@
 resource "edc_asset" "asset_1" {
-  provider = edc.org_b
   asset = {
     "asset:prop:id" : "asset_1_org_b",
     "asset:prop:name" : "FirstAssetOrgB",

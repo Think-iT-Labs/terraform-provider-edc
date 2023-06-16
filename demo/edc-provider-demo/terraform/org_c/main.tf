@@ -1,5 +1,4 @@
 resource "edc_asset" "asset_1" {
-  provider = edc.org_c
   asset = {
     "asset:prop:id" : "asset_1_org_c",
     "asset:prop:name" : "FirstAssetOrgC",
@@ -16,7 +15,6 @@ resource "edc_asset" "asset_1" {
 }
 
 resource "edc_asset" "asset_2" {
-  provider = edc.org_c
   asset = {
     "asset:prop:id" : "asset_2_org_c",
     "asset:prop:name" : "SecondAssetOrgC",
