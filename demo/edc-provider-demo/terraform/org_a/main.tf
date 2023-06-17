@@ -61,3 +61,32 @@ resource "edc_asset" "asset_4" {
     }
   }
 }
+
+resource "edc_policy" "policy" {
+  id = "abcdPolicy"
+  policy = {
+    permissions = [
+      {
+        edctype = "dataspaceconnector:permission",
+        target  = edc_asset.asset_1.id,
+        action = {
+          type = "USE"
+        },
+      }
+    ]
+  }
+}
+
+
+resource "edc_contract_definition" "name" {
+  access_policy_id   = edc_policy.policy.id
+  contract_policy_id = edc_policy.policy.id
+  validity           = 600
+  criteria = [
+    {
+      operand_left  = "asset:prop:id"
+      operator      = "="
+      operand_right = edc_asset.asset_1.id
+    }
+  ]
+}
