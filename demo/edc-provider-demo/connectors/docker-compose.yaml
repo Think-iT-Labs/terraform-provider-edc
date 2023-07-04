@@ -1,7 +1,26 @@
 version: "3.9"
 
 services:
-  consumer-connector-org-a:
+  # consumer-connector-org-a:
+  #   image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
+  #   platform: ${DOCKER_PLATFORM:-linux/amd64}
+  #   ports:
+  #     - "18191:9191" # connector default
+  #     - "18192:9192" # connector control
+  #     - "18193:9193" # connector management
+  #     - "18194:9194" # connector protocol
+  #     - "18291:9291" # data-plane public
+  #   environment:
+  #     EDC_VAULT: /config/vault.properties
+  #     EDC_KEYSTORE: /config/vault-keys.p12
+  #     EDC_KEYSTORE_PASSWORD: 123456
+  #     EDC_FS_CONFIG: /config/configuration.properties
+  #   volumes:
+  #     - ./conf/consumer-connector.config:/config
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+
+  provider-connector-org-a:
     image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
@@ -9,26 +28,7 @@ services:
       - "19192:9192" # connector control
       - "19193:9193" # connector management
       - "19194:9194" # connector protocol
-      - "19291:9291" # data-plane public
-    environment:
-      EDC_VAULT: /config/vault.properties
-      EDC_KEYSTORE: /config/vault-keys.p12
-      EDC_KEYSTORE_PASSWORD: 123456
-      EDC_FS_CONFIG: /config/configuration.properties
-    volumes:
-      - ./conf/consumer-connector.config:/config
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  provider-connector-org-a:
-    image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
-    platform: ${DOCKER_PLATFORM:-linux/amd64}
-    ports:
-      - "29191:9191" # connector default
-      - "29192:9192" # connector control
-      - "29193:9193" # connector management
-      - "29194:9194" # connector protocol
-      - "29291:9291" # data-plane public
+      - "19295:9291" # data-plane public
     environment:
       EDC_VAULT: /config/vault.properties
       EDC_KEYSTORE: /config/vault-keys.p12
@@ -38,15 +38,16 @@ services:
       - ./conf/provider-connector.config:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
   consumer-connector-org-b:
     image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
-      - "18181:9191" # connector default
-      - "18182:9192" # connector control
-      - "18183:9193" # connector management
-      - "18184:9194" # connector protocol
-      - "18281:9291" # data-plane public
+      - "28191:9191" # connector default
+      - "28192:9192" # connector control
+      - "28193:9193" # connector management
+      - "28194:9194" # connector protocol
+      - "28291:9291" # data-plane public
     environment:
       EDC_VAULT: /config/vault.properties
       EDC_KEYSTORE: /config/vault-keys.p12
@@ -57,58 +58,21 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  provider-connector-org-b:
-    image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
-    platform: ${DOCKER_PLATFORM:-linux/amd64}
-    ports:
-      - "28181:9191" # connector default
-      - "28182:9192" # connector control
-      - "28183:9193" # connector management
-      - "28184:9194" # connector protocol
-      - "28281:9291" # data-plane public
-    environment:
-      EDC_VAULT: /config/vault.properties
-      EDC_KEYSTORE: /config/vault-keys.p12
-      EDC_KEYSTORE_PASSWORD: 123456
-      EDC_FS_CONFIG: /config/configuration.properties
-    volumes:
-      - ./conf/provider-connector.config:/config
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-  consumer-connector-org-c:
-    image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
-    platform: ${DOCKER_PLATFORM:-linux/amd64}
-    ports:
-      - "17171:9191" # connector default
-      - "17172:9192" # connector control
-      - "17173:9193" # connector management
-      - "17174:9194" # connector protocol
-      - "17271:9291" # data-plane public
-    environment:
-      EDC_VAULT: /config/vault.properties
-      EDC_KEYSTORE: /config/vault-keys.p12
-      EDC_KEYSTORE_PASSWORD: 123456
-      EDC_FS_CONFIG: /config/configuration.properties
-    volumes:
-      - ./conf/consumer-connector.config:/config
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  provider-connector-org-c:
-    image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
-    platform: ${DOCKER_PLATFORM:-linux/amd64}
-    ports:
-      - "27171:9191" # connector default
-      - "27172:9192" # connector control
-      - "27173:9193" # connector management
-      - "27174:9194" # connector protocol
-      - "27271:9291" # data-plane public
-    environment:
-      EDC_VAULT: /config/vault.properties
-      EDC_KEYSTORE: /config/vault-keys.p12
-      EDC_KEYSTORE_PASSWORD: 123456
-      EDC_FS_CONFIG: /config/configuration.properties
-    volumes:
-      - ./conf/provider-connector.config:/config
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+  # provider-connector-org-b:
+  #   image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
+  #   platform: ${DOCKER_PLATFORM:-linux/amd64}
+  #   ports:
+  #     - "29181:9191" # connector default
+  #     - "29182:9192" # connector control
+  #     - "29183:9193" # connector management
+  #     - "29184:9194" # connector protocol
+  #     - "29281:9291" # data-plane public
+  #   environment:
+  #     EDC_VAULT: /config/vault.properties
+  #     EDC_KEYSTORE: /config/vault-keys.p12
+  #     EDC_KEYSTORE_PASSWORD: 123456
+  #     EDC_FS_CONFIG: /config/configuration.properties
+  #   volumes:
+  #     - ./conf/provider-connector.config:/config
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"

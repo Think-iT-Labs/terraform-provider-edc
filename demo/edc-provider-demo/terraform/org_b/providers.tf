@@ -10,10 +10,10 @@ terraform {
 provider "edc" {
   token = "1234"
   addresses = {
-    default    = "http://localhost:28183/api"
-    management = "http://localhost:28183/api/v1/data"
-    protocol   = "http://localhost:28183/api/v1/ids"
-    public     = "http://localhost:28183/public"
-    control    = "http://localhost:28183/control"
+    default    = "http://localhost:28191/api"
+    control    = "http://localhost:28192/control"
+    management = "http://localhost:28193/api/v1/data"
+    protocol   = "http://localhost:28194/api/v1/ids"
+    public     = "http://localhost:28291/public"
   }
 }

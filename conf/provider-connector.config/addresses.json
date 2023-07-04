@@ -2,10 +2,10 @@
   "uid": "2",
   "name": "provider.edc.think-it.io",
   "addresses": {
-    "default": "http://localhost:29191/api",
-    "data": "http://localhost:29193/api/v1/data",
-    "ids": "http://provider-connector:9194/api/v1/ids",
-    "public": "http://localhost:29291/public",
-    "control": "http://localhost:29292/control"
+    "default": "http://localhost:9191/api",
+    "control": "http://localhost:9192/control",
+    "data": "http://localhost:9193/api/v1/data",
+    "ids": "http://172.20.0.2:9194/api/v1/ids",
+    "public": "http://localhost:9291/public"
   }
 }
