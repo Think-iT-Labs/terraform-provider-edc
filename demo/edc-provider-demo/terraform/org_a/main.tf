@@ -7,9 +7,8 @@ resource "edc_asset" "asset_1" {
 
   data = {
     http = {
-      base_url = "http://localhost:8080"
+      base_url = "http://nginx:80/file_a1.txt"
       method   = "GET"
-      path     = "/file_a1.txt"
     }
   }
 }
@@ -23,9 +22,8 @@ resource "edc_asset" "asset_2" {
 
   data = {
     http = {
-      base_url = "http://localhost:8080"
+      base_url = "http://nginx:80/file_a2.txt"
       method   = "GET"
-      path     = "/file_a2.txt"
     }
   }
 }
@@ -39,9 +37,8 @@ resource "edc_asset" "asset_3" {
 
   data = {
     http = {
-      base_url = "http://localhost:8080"
+      base_url = "http://nginx:80/file_a3.txt"
       method   = "GET"
-      path     = "/file_a3.txt"
     }
   }
 }
@@ -55,9 +52,8 @@ resource "edc_asset" "asset_4" {
 
   data = {
     http = {
-      base_url = "http://localhost:8080"
+      base_url = "http://nginx:80/file_a4.txt"
       method   = "GET"
-      path     = "/file_a4.txt"
     }
   }
 }
@@ -72,16 +68,16 @@ resource "edc_policy" "policy" {
         action = {
           type = "USE"
         },
+        type = "set"
       }
     ]
   }
 }
 
-
 resource "edc_contract_definition" "name" {
   access_policy_id   = edc_policy.policy.id
   contract_policy_id = edc_policy.policy.id
-  validity           = 600
+  validity           = 31536000
   criteria = [
     {
       operand_left  = "asset:prop:id"

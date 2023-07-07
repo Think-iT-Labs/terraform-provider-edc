@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  provider-connector:
+      image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
+      platform: ${DOCKER_PLATFORM:-linux/amd64}
+      ports:
+        - "19191:9191" # connector default
+        - "19192:9192" # connector control
+        - "19193:9193" # connector management
+        - "19194:9194" # connector protocol
+        - "19295:9291" # data-plane public
+      environment:
+        EDC_VAULT: /config/vault.properties
+        EDC_KEYSTORE: /config/vault-keys.p12
+        EDC_KEYSTORE_PASSWORD: 123456
+        EDC_FS_CONFIG: /config/configuration.properties
+      volumes:
+        - ./provider-connector.config:/config
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      networks:
+        connectors-network:
+          aliases:
+            - provider-connector
+        fs-network:
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./asset_files/file_a1.txt:/www/data/file_a1.txt
+      - ./asset_files/file_a2.txt:/www/data/file_a2.txt
+      - ./asset_files/file_a3.txt:/www/data/file_a3.txt
+      - ./asset_files/file_a4.txt:/www/data/file_a4.txt
+    networks:
+      - fs-network
+
+networks:
+  fs-network:
+    driver: bridge
+  connectors-network:
+    external:
+      name: connectors_network

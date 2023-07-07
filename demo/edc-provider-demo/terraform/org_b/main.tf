@@ -7,9 +7,8 @@ resource "edc_asset" "asset_1" {
 
   data = {
     http = {
-      base_url = "http://localhost:8080"
+      base_url = "http://localhost:8080/file_b1.txt"
       method   = "GET"
-      path     = "/file_b1.txt"
     }
   }
 }

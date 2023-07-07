@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  consumer-connector:
+    image: ghcr.io/think-it-labs/edc-connector-client/test-connector:0.0.1-milestone-8
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "28191:9191" # connector default
+      - "28192:9192" # connector control
+      - "28193:9193" # connector management
+      - "28194:9194" # connector protocol
+      - "28291:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./consumer-connector.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      connectors-network:
+          aliases:
+            - consumer-connector
+
+networks:
+  connectors-network:
+    external:
+      name: connectors_network
+      
