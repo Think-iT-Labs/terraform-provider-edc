@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/Think-iT-Labs/edc-connector-client/go/config"
-	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
+	"github.com/Think-iT-Labs/edc-connector-client-go/config"
+	"github.com/Think-iT-Labs/edc-connector-client-go/edc"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"

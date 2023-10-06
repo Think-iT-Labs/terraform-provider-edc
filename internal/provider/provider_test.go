@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
+	"github.com/Think-iT-Labs/edc-connector-client-go/edc"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"

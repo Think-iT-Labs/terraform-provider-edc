@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
-	"github.com/Think-iT-Labs/edc-connector-client/go/service/assets"
+	"github.com/Think-iT-Labs/edc-connector-client-go/edc"
+	"github.com/Think-iT-Labs/edc-connector-client-go/service/assets"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"

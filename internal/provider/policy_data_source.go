@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
-	"github.com/Think-iT-Labs/edc-connector-client/go/service/policies"
+	"github.com/Think-iT-Labs/edc-connector-client-go/edc"
+	"github.com/Think-iT-Labs/edc-connector-client-go/service/policies"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -93,15 +93,10 @@ func (d *PolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	policy, apiError, err := d.client.GetPolicy(data.Id.ValueString())
+	policy, err := d.client.GetPolicy(data.Id.ValueString())
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Policy, got error: %s", err))
-		return
-	}
-
-	if apiError != nil {
-		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to read Policy, got error: %v", *apiError[0].Message))
 		return
 	}
 
