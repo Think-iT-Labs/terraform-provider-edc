@@ -35,5 +35,3 @@ Read-Only:
 - `operand_left` (String)
 - `operand_right` (String)
 - `operator` (String)
-
-

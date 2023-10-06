@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Think-iT-Labs/edc-connector-client/go/edc"
-	"github.com/Think-iT-Labs/edc-connector-client/go/service/policies"
+	"github.com/Think-iT-Labs/edc-connector-client-go/edc"
+	"github.com/Think-iT-Labs/edc-connector-client-go/service/policies"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -353,15 +353,10 @@ func (p *PoliciesResource) Create(ctx context.Context, req resource.CreateReques
 
 	sdkObject := data.toSDKObject()
 
-	policy, apiError, err := p.client.CreatePolicy(*sdkObject)
+	policy, err := p.client.CreatePolicy(*sdkObject)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Policy, got error: %s", err))
-		return
-	}
-
-	if apiError != nil {
-		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to create Policy, got error: %v", apiError))
 		return
 	}
 
@@ -388,15 +383,10 @@ func (p *PoliciesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	policy, apiError, err := p.client.GetPolicy(data.Id.ValueString())
+	policy, err := p.client.GetPolicy(data.Id.ValueString())
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Policy with id %s, got error: %s", data.Id.String(), err))
-		return
-	}
-
-	if apiError != nil {
-		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to read Policy with id %s, got error: %s", data.Id.String(), err))
 		return
 	}
 
@@ -435,14 +425,9 @@ func (p *PoliciesResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	apiError, err := p.client.DeletePolicy(data.Id.ValueString())
+	err := p.client.DeletePolicy(data.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Policy with id %s, got error: %s", data.Id.String(), err))
-		return
-	}
-
-	if apiError != nil {
-		resp.Diagnostics.AddError("API Error", fmt.Sprintf("Unable to delete Policy with id %s, got error: %s", data.Id.String(), err))
 		return
 	}
 }
