@@ -1930,5 +1930,3 @@ Optional:
 Optional:
 
 - `edctype` (String)
-
-

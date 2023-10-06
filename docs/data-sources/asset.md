@@ -54,5 +54,3 @@ output "asset_output" {
 - `asset_properties` (Map of String)
 - `created_at` (Number)
 - `data_address` (Map of String)
-
-
